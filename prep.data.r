@@ -8,11 +8,11 @@
 
 ## etc (add more subheadings for other main tasks)
 
-# Separate data frames for men and women
-# Separate by apparatus
+# Separate data frames for men and women DONE
+# Separate by apparatus DONE
 # Remove duplicate rows
 # Clean up names to match up athletes
-# Clean up apparatus names (VT1 VT_1)
+# Clean up apparatus names (VT1 VT_1) DONE
 # Separate qualifying & final (or superscore, etc)
 # Do basic analysis based on the team
 
