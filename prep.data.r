@@ -19,6 +19,10 @@ library(dplyr)
 
 data_2223
 
+# Convert all names to upper case
+data_2223$FirstName = toupper(data_2223$FirstName)
+data_2223$LastName = toupper(data_2223$LastName)
+
 # Rename columns so that the same event is grouped together
 data_2223$Apparatus <- gsub("hb", "HB", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_1", "VT1", data_2223$Apparatus)
@@ -29,14 +33,14 @@ men <- data_2223[data_2223$Gender == "m",]
 women <- data_2223[data_2223$Gender == "w",]
 
 # Further split data by event (so split is now by event by gender)
-apparatus_list_men = sort(unique(men$Apparatus))
+apparatus_men = sort(unique(men$Apparatus))
 apparatus_group_men = men %>% group_by(Apparatus)
 events_m = group_split(apparatus_group_men)
 for(event in events_m){
   assign(paste(event$Apparatus[1],"m",sep="_"), event)
 }
 
-apparatus_list_women = sort(unique(women$Apparatus))
+apparatus_women = sort(unique(women$Apparatus))
 apparatus_group_women = women %>% group_by(Apparatus)
 events_w = group_split(apparatus_group_women)
 for(event in events_w){
@@ -45,7 +49,7 @@ for(event in events_w){
 
 # the names of the events for the different genders, we access the event data
 # by gender by indicating the event and gender e.g. 'VT_w'
-apparatus_list_men
-apparatus_list_women
+apparatus_men
+apparatus_women
 
 
