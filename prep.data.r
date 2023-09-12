@@ -15,28 +15,37 @@
 # Clean up apparatus names (VT1 VT_1) DONE
 # Separate qualifying & final (or superscore, etc)
 # Do basic analysis based on the team
+library(dplyr)
 
 data_2223
+
+# Rename columns so that the same event is grouped together
 data_2223$Apparatus <- gsub("hb", "HB", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_1", "VT1", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_2", "VT2", data_2223$Apparatus)
   
+# Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
 women <- data_2223[data_2223$Gender == "w",]
 
-hb <- men[men$Apparatus == "HB",]
-ph <- men[men$Apparatus == "PH",]
-fx_m <- men[men$Apparatus == "FX",]
-pb <- men[men$Apparatus == "PB",]
-sr <- men[men$Apparatus == "SR",]
-vt1_m <- men[men$Apparatus == "VT1",]
-vt2_m <- men[men$Apparatus == "VT2",]
-vt_m <- men[men$Apparatus == "VT",]
+# Further split data by event (so split is now by event by gender)
+apparatus_list_men = sort(unique(men$Apparatus))
+apparatus_group_men = men %>% group_by(Apparatus)
+events_m = group_split(apparatus_group_men)
+for(event in events_m){
+  assign(paste(event$Apparatus[1],"m",sep="_"), event)
+}
 
-bb <- women[women$Apparatus == "BB",]
-fx_w <- women[women$Apparatus == "FX",]
-ub <- women[women$Apparatus == "UB",]
-vt1_w <- women[women$Apparatus == "VT1",]
-vt2_w <- women[women$Apparatus == "VT2",]
-vt_w <- women[women$Apparatus == "VT",]
+apparatus_list_women = sort(unique(women$Apparatus))
+apparatus_group_women = women %>% group_by(Apparatus)
+events_w = group_split(apparatus_group_women)
+for(event in events_w){
+  assign(paste(event$Apparatus[1],"w",sep="_"), event)
+}
+
+# the names of the events for the different genders, we access the event data
+# by gender by indicating the event and gender e.g. 'VT_w'
+apparatus_list_men
+apparatus_list_women
+
 
