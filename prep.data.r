@@ -17,13 +17,18 @@
 # Do basic analysis based on the team
 library(dplyr)
 library(tidyr)
+library(stringi)
 
 data_2223
 
 
 # Split when there are spaces in between first names we are only checking when
 # first name and last name and country matches for a person
-data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), sep = "^\\S*\\K\\s+")
+data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), 
+                     sep = "^\\S*\\K\\s+")
+
+#Removing all accents
+apply(data_2223,2,function(x) stringi::stri_trans_general(x, "Latin-ASCII") )
 
 # Convert all names to upper case
 data_2223$FirstName = toupper(data_2223$FirstName)
@@ -69,4 +74,10 @@ for(event in events_w){
 apparatus_men
 apparatus_women
 
+
+# Find athletes with missing countries to fill later
+m <- (data_2223 %>% filter(Country == ''))$LastName %>% unique()
+
+data_2223 %>% filter(LastName %in% m) %>% select(LastName, FirstName, Country) %>%
+  unique() %>% arrange(LastName) 
 
