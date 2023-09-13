@@ -49,6 +49,8 @@ data_2223$Country <- gsub("GE1", "GER", data_2223$Country)
 data_2223$Country <- gsub("GE2", "GER", data_2223$Country)
 data_2223$Country <- gsub("NIR", "IRL", data_2223$Country)
 
+#Remove all duplicated rows
+data_2223 = distinct(data_2223)
   
 # Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
