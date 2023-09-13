@@ -24,7 +24,8 @@ data_2223
 
 # Split when there are spaces in between first names we are only checking when
 # first name and last name and country matches for a person
-data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), sep = "^\\S*\\K\\s+")
+data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), 
+                     sep = "^\\S*\\K\\s+")
 
 #Removing all accents
 apply(data_2223,2,function(x) stringi::stri_trans_general(x, "Latin-ASCII") )
@@ -37,6 +38,17 @@ data_2223$LastName = toupper(data_2223$LastName)
 data_2223$Apparatus <- gsub("hb", "HB", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_1", "VT1", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_2", "VT2", data_2223$Apparatus)
+
+data_2223$Country <- gsub("CCS", "GUA", data_2223$Country)
+data_2223$Country <- gsub("ENG", "GBR", data_2223$Country)
+data_2223$Country <- gsub("IOM", "GBR", data_2223$Country)
+data_2223$Country <- gsub("JEY", "GBR", data_2223$Country)
+data_2223$Country <- gsub("SCO", "GBR", data_2223$Country)
+data_2223$Country <- gsub("WAL", "GBR", data_2223$Country)
+data_2223$Country <- gsub("GE1", "GER", data_2223$Country)
+data_2223$Country <- gsub("GE2", "GER", data_2223$Country)
+data_2223$Country <- gsub("NIR", "IRL", data_2223$Country)
+
   
 # Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
@@ -62,4 +74,10 @@ for(event in events_w){
 apparatus_men
 apparatus_women
 
+
+# Find athletes with missing countries to fill later
+m <- (data_2223 %>% filter(Country == ''))$LastName %>% unique()
+
+data_2223 %>% filter(LastName %in% m) %>% select(LastName, FirstName, Country) %>%
+  unique() %>% arrange(LastName) 
 
