@@ -42,7 +42,7 @@ data_2223$Country <- gsub("SCO", "GBR", data_2223$Country)
 data_2223$Country <- gsub("WAL", "GBR", data_2223$Country)
 data_2223$Country <- gsub("GE1", "GER", data_2223$Country)
 data_2223$Country <- gsub("GE2", "GER", data_2223$Country)
-data_2223$Country <- gsub("NIR", "IRL", data_2223$Country)
+data_2223$Country <- gsub("NIR", "IRL", data_2223$Country) # come back to this if there are new athletes cause they might not all be IRL
 
   
 # Split data by gender
