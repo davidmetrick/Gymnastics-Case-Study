@@ -16,8 +16,14 @@
 # Separate qualifying & final (or superscore, etc)
 # Do basic analysis based on the team
 library(dplyr)
+library(tidyr)
 
 data_2223
+
+
+# Split when there are spaces in between first names we are only checking when
+# first name and last name and country matches for a person
+data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), sep = "^\\S*\\K\\s+")
 
 # Convert all names to upper case
 data_2223$FirstName = toupper(data_2223$FirstName)
