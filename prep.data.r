@@ -27,6 +27,17 @@ data_2223$LastName = toupper(data_2223$LastName)
 data_2223$Apparatus <- gsub("hb", "HB", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_1", "VT1", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_2", "VT2", data_2223$Apparatus)
+
+data_2223$Country <- gsub("CCS", "GUA", data_2223$Country)
+data_2223$Country <- gsub("ENG", "GBR", data_2223$Country)
+data_2223$Country <- gsub("IOM", "GBR", data_2223$Country)
+data_2223$Country <- gsub("JEY", "GBR", data_2223$Country)
+data_2223$Country <- gsub("SCO", "GBR", data_2223$Country)
+data_2223$Country <- gsub("WAL", "GBR", data_2223$Country)
+data_2223$Country <- gsub("GE1", "GER", data_2223$Country)
+data_2223$Country <- gsub("GE2", "GER", data_2223$Country)
+data_2223$Country <- gsub("NIR", "IRL", data_2223$Country)
+
   
 # Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
