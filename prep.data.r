@@ -18,6 +18,8 @@
 library(dplyr)
 library(tidyr)
 library(stringi)
+library(stringr)
+library(lubridate)
 
 data_2223
 
@@ -52,6 +54,32 @@ data_2223$Country <- gsub("NIR", "IRL", data_2223$Country) # come back to this i
 #Remove all duplicated rows
 data_2223 = distinct(data_2223)
   
+# Extract start dates and end dates
+convertDate <- function(daterange){
+  daterange = gsub(",","",daterange)
+  dates = str_split(daterange,"-",simplify = T)
+  endDate = dmy(trimws(dates[2]))
+  start = str_split(trimws(dates[1])," ")[[1]]
+  if(length(start) ==1){
+    startDate = paste(dates[1],format(as.Date(endDate, format="%d-%m-%Y"),"%m-%Y"),sep="-")
+  }else if(length(start)==2){
+    startDate = paste(dates[1],format(as.Date(endDate, format="%d-%m-%Y"),"%Y"),sep="-")
+  }else{
+    startDate = paste(dmy(dates[1]))
+  }
+  return(c(startDate,paste(endDate)))
+}
+startDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[1]),use.names = F)
+endDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[2]),use.names = F)
+data_2223$StartDate = startDates
+data_2223$EndDate = endDates
+
+unlist(lapply(mtcars, mean), use.names = FALSE)
+for(date in data_2223$Date){
+  convertDate(date)
+  print(date)
+}
+
 # Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
 women <- data_2223[data_2223$Gender == "w",]
@@ -90,3 +118,9 @@ data_2223 |> filter(Country == '') |> select(LastName, FirstName, Country) |>
 #   select(LastName, FirstName, Country) %>%
 #        unique() %>% arrange(LastName)
 
+s1 = "23-26 Feb 2023"
+
+dates = str_split(s1,"-",simplify = T)
+
+
+  dmy("26 Feb 2023")
