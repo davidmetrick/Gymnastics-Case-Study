@@ -58,3 +58,17 @@ apparatus_scores_men
 apparatus_scores_women
 
 
+for(event in apparatus_scores_men){
+  paste(event,"GBR top 5")
+  print(eval(as.name(event)) %>% 
+          filter(Country=='GBR') %>%
+          head(5))
+}
+
+for(event in apparatus_scores_women){
+  paste(event,"GBR top 5")
+  print(eval(as.name(event)) %>% 
+          filter(Country=='GBR') %>%
+          head(5))
+}
+
