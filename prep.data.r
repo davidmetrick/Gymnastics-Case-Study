@@ -78,10 +78,12 @@ apparatus_women
 
 
 # Find athletes with missing countries to fill later by matching with existing athletes
-data_2223 = data_2223 %>% group_by(FirstName,LastName) %>% mutate(Country = sort(Country,decreasing=T)[1])
+data_2223 = data_2223 %>% group_by(FirstName,LastName) %>% 
+  mutate(Country = sort(Country,decreasing=T)[1])
 
 
 m <- (data_2223 %>% filter(Country == ''))$LastName %>% unique()
-data_2223 %>% filter(LastName %in% m) %>% select(LastName, FirstName, Country) %>%
+data_2223 %>% filter(LastName %in% m) %>% 
+  select(LastName, FirstName, Country) %>%
        unique() %>% arrange(LastName)
 
