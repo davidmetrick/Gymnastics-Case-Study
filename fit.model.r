@@ -97,3 +97,28 @@ for (country in countries_women){
           filter(Country==country) %>%
           head(5))
 }
+
+
+
+####################
+
+# New format 
+
+
+men_pivot <- data_2223 %>% 
+  filter(Gender == 'm', Country %in% countries_men) %>%
+  group_by(FirstName, LastName, Country, Apparatus) %>% 
+  summarize(avg_score = mean(Score,na.rm=T),
+            var_score = ifelse(is.na(var(Score)),0,var(Score)),
+            Country=Country[1]) %>%
+  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score))
+
+women_pivot <- data_2223 %>% 
+  filter(Gender == 'w', Country %in% countries_women) %>%
+  group_by(FirstName, LastName, Country, Apparatus) %>% 
+  summarize(avg_score = mean(Score,na.rm=T),
+            var_score = ifelse(is.na(var(Score)),0,var(Score)),
+            Country=Country[1]) %>%
+  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score))
+
+
