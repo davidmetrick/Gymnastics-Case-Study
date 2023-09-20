@@ -111,7 +111,9 @@ men_pivot <- data_2223 %>%
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
             Country=Country[1]) %>%
-  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score))
+  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score)) %>%
+  select("FirstName", "LastName", "Country", 
+         paste0(rep(c("avg_score_", "var_score_"), 8), sort(rep(apparatus_men,2))))
 
 women_pivot <- data_2223 %>% 
   filter(Gender == 'w', Country %in% countries_women) %>%
@@ -119,6 +121,9 @@ women_pivot <- data_2223 %>%
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
             Country=Country[1]) %>%
-  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score))
+  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score),
+              names_sort = T) %>%
+  select("FirstName", "LastName", "Country", 
+         paste0(rep(c("avg_score_", "var_score_"), 4), sort(rep(apparatus_women,2))))
 
 
