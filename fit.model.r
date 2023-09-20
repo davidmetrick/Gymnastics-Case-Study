@@ -4,6 +4,7 @@
 ## first step: make model that finds the average score for each person on each individual apparatus.
 
 library(dplyr)
+library(purrr)
 options(dplyr.summarise.inform = FALSE)
 
 # For ease of debugging we shall loop through the events for men and women and
@@ -38,7 +39,15 @@ for(i in 1:length(apparatus_list_women)){
            arrange(desc(avg_score)))
 }
 
+# Choosing 12 countries for the men and women 
+countries_men <- c('CHN', 'JPN', 'GBR', 'ITA', 'USA', 'ESP', 
+                   'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
+
+countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN', 
+                     'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+
 #Now we display the top 5 athletes from the US for each of the events
+
 
 for(event in apparatus_scores_men){
   paste(event,"USA top 5")
@@ -66,9 +75,25 @@ for(event in apparatus_scores_men){
 }
 
 for(event in apparatus_scores_women){
-  paste(event,"GBR top 5")
+  for (country in countries_women){
+  paste(event, country, " top 5")
+  
   print(eval(as.name(event)) %>% 
-          filter(Country=='GBR') %>%
+          filter(Country==country) %>%
           head(5))
+  }
 }
 
+ex <- BB_w_scores |> group_by(Country) |> group_nest() |> 
+  filter(Country %in% countries_women) |>
+  mutate(top5 = map(data, ~ head(.x, 5))) 
+
+
+
+for (country in countries_women){
+  paste(event, country, " top 5")
+  
+  print(eval(as.name(event)) %>% 
+          filter(Country==country) %>%
+          head(5))
+}
