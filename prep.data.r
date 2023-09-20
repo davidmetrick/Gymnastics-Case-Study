@@ -106,8 +106,3 @@ data_2223 = data_2223 %>% group_by(FirstName,LastName) %>%
 
 data_2223 |> filter(Country == '') |> select(LastName, FirstName, Country) |>
   unique()
-
-# m <- (data_2223 %>% filter(Country == ''))$LastName %>% unique()
-# data_2223 %>% filter(LastName %in% m) %>% 
-#   select(LastName, FirstName, Country) %>%
-#        unique() %>% arrange(LastName)
