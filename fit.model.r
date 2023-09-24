@@ -169,7 +169,7 @@ colnames(qualifying_scores_women) <- c("FirstName","LastName","Country","Event",
 #   group_by(apparatus_women) %>% group_nest() %>%
 #   data.frame(matrix(ncol = 3, nrow = 0))
 
-
+#simulate countries
 for(country in teams_women$Country){
   team = (teams_women%>% filter(Country == country))$top5[[1]]
   top2 = team%>% head(2)
@@ -188,11 +188,32 @@ for(country in teams_women$Country){
           event_data%>%select(FirstName,LastName,Country,event,sim_score))
   }
 }
+#simulate individuals
+for(event in apparatus_women){
+  others_women_ordered= teams_others_women%>%
+    arrange(desc((eval(as.name(
+      paste0("avg_score_",event)
+    )))))
+  others_women_event = others_women_ordered%>%select(FirstName,LastName,Country,contains(event))
+  others_women_event$sim_score = rnorm(nrow(others_women_event)
+                                       ,unlist(others_women_event[,4]),unlist(others_women_event[,5]))
+  others_women_event$event = event
+  qualifying_scores_women= rbind(qualifying_scores_women,
+                                 others_women_event%>%select(FirstName,LastName,Country,event,sim_score) )
+}
 order_sim = function(data){
   return(arrange(data,desc(sim_score)))
 }
 qualifying_scores_women=qualifying_scores_women%>%group_by(event)%>%
   arrange(desc(sim_score)) %>% group_nest()
 
+get_qualifiers = function(data){
+  #assumes data is ordered
+  data_max_2 = data %>% group_by(Country) %>% slice(1:2)%>%
+    arrange(desc(sim_score))
+  return(data_max_2%>%head(8))
+}
 
+qualified = qualifying_scores_women
+qualified$data 
 
