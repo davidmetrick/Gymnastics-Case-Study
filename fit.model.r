@@ -148,9 +148,51 @@ teams_women <- women_sorted |> group_by(Country) |> group_nest() |>
   mutate(top5 = purrr::map(data, ~ head(.x, 5)))
 
 teams_others_women <- women_sorted |> 
-  filter(!Country %in% countries_men) |>
+  filter(!Country %in% countries_women) |>
   head(n=36)
 
 teams_others_men <- men_sorted |> 
   filter(!Country %in% countries_men) |>
   head(n=36)
+
+#### SIMULATION OF QUALIFYING ####
+
+# keep it simple force top 2 composites to participate in everything and deal
+# with the rest
+
+# first simulate the individual events
+qualifying_scores_women <- data.frame(matrix(ncol = 5, nrow = 0))
+colnames(qualifying_scores_women) <- c("FirstName","LastName","Country","Event","sim_score")
+
+
+# qualifying_scores_women = qualifying_scores_women %>% 
+#   group_by(apparatus_women) %>% group_nest() %>%
+#   data.frame(matrix(ncol = 3, nrow = 0))
+
+
+for(country in teams_women$Country){
+  team = (teams_women%>% filter(Country == country))$top5[[1]]
+  top2 = team%>% head(2)
+  bot3 = team %>% tail(3)
+  for(event in apparatus_women){
+    top2_event = top2%>%select(FirstName,LastName,contains(event))
+    bot3_event_ordered = bot3[-order(paste0("avg_score_",event)),][1:2,]
+    bot3_event = bot3_event_ordered%>%select(FirstName,LastName,contains(event))
+    event_data = rbind(top2_event,bot3_event)
+    
+    ## change hard coding later
+    event_data$sim_score = rnorm(4,unlist(event_data[,3]),unlist(event_data[,4]))
+    event_data$Country = country
+    event_data$event = event
+    qualifying_scores_women= rbind(qualifying_scores_women,
+          event_data%>%select(FirstName,LastName,Country,event,sim_score))
+  }
+}
+order_sim = function(data){
+  return(arrange(data,desc(sim_score)))
+}
+qualifying_scores_women=qualifying_scores_women%>%group_by(event)%>%
+  arrange(desc(sim_score)) %>% group_nest()
+
+
+
