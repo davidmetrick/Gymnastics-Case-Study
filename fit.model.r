@@ -147,7 +147,7 @@ teams_women <- women_sorted |> group_by(Country) |> group_nest() |>
   filter(Country %in% countries_women) |>
   mutate(top5 = purrr::map(data, ~ head(.x, 5)))
 
-teams_others_women <- men_sorted |> 
+teams_others_women <- women_sorted |> 
   filter(!Country %in% countries_men) |>
   head(n=36)
 
