@@ -127,3 +127,21 @@ women_pivot <- data_2223 %>%
          paste0(rep(c("avg_score_", "var_score_"), 4), sort(rep(apparatus_women,2))))
 
 
+men_pivot_2 <- men_pivot
+men_pivot_2[is.na(men_pivot_2)] <- 0
+men_pivot$composite_score <- men_pivot_2$avg_score_FX + men_pivot_2$avg_score_HB + men_pivot_2$avg_score_PB + men_pivot_2$avg_score_PH + men_pivot_2$avg_score_SR + mean(na.omit(c(men_pivot$avg_score_VT, men_pivot$avg_score_VT1, men_pivot$avg_score_VT2)))
+
+women_pivot_2 <- women_pivot
+women_pivot_2[is.na(women_pivot_2)] <- 0
+women_pivot$composite_score <- women_pivot_2$avg_score_BB + women_pivot_2$avg_score_FX + women_pivot_2$avg_score_UB + mean(na.omit(c(women_pivot$avg_score_VT, women_pivot$avg_score_VT1, women_pivot$avg_score_VT2)))
+
+
+men_sorted <- men_pivot[order(-men_pivot$composite_score),]
+women_sorted <- women_pivot[order(-women_pivot$composite_score),]
+
+teams_men <- men_sorted |> group_by(Country) |> group_nest() |> 
+  filter(Country %in% countries_men) |>
+  mutate(top5 = map(data, ~ head(.x, 5)))
+teams_women <- men_sorted |> group_by(Country) |> group_nest() |> 
+  filter(Country %in% countries_women) |>
+  mutate(top5 = map(data, ~ head(.x, 5)))
