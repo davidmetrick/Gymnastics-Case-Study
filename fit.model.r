@@ -176,7 +176,9 @@ for(country in teams_women$Country){
   bot3 = team %>% tail(3)
   for(event in apparatus_women){
     top2_event = top2%>%select(FirstName,LastName,contains(event))
-    bot3_event_ordered = bot3[-order(paste0("avg_score_",event)),][1:2,]
+    bot3_event_ordered = bot3 %>%arrange(desc((eval(as.name(
+      paste0("avg_score_",event)
+    ))))) %>%head(2)
     bot3_event = bot3_event_ordered%>%select(FirstName,LastName,contains(event))
     event_data = rbind(top2_event,bot3_event)
     
@@ -207,13 +209,21 @@ order_sim = function(data){
 qualifying_scores_women=qualifying_scores_women%>%group_by(event)%>%
   arrange(desc(sim_score)) %>% group_nest()
 
-get_qualifiers = function(data){
+get_qualifiers_ind = function(data,n=8){
   #assumes data is ordered
   data_max_2 = data %>% group_by(Country) %>% slice(1:2)%>%
     arrange(desc(sim_score))
-  return(data_max_2%>%head(8))
+  return(data_max_2%>%head(n))
 }
 
 qualified = qualifying_scores_women
-qualified$data 
+qualified$data = lapply(qualified$data,get_qualifiers_ind)
 
+# find athletes who participated in everything
+aa_athletes = qualifying_scores_women %>% unnest(data) %>% 
+  group_by(FirstName,LastName,Country)%>%
+  filter(n()==4) %>%
+  summarise(sim_score = sum(sim_score)) %>%
+  arrange(desc(sim_score))
+
+aa_qualified = get_qualifiers_ind(aa_athletes,24)
