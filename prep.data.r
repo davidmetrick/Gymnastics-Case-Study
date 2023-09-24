@@ -75,11 +75,6 @@ endDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[2]),use.names
 data_2223$StartDate = startDates
 data_2223$EndDate = endDates
 
-unlist(lapply(mtcars, mean), use.names = FALSE)
-for(date in data_2223$Date){
-  convertDate(date)
-  print(date)
-}
 
 # Split data by gender
 men <- data_2223[data_2223$Gender == "m",]
