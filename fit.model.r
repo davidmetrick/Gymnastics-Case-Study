@@ -5,6 +5,7 @@
 
 library(dplyr)
 library(purrr)
+library(tidyr)
 options(dplyr.summarise.inform = FALSE)
 
 # For ease of debugging we shall loop through the events for men and women and
@@ -86,7 +87,7 @@ for(event in apparatus_scores_women){
 
 ex <- BB_w_scores |> group_by(Country) |> group_nest() |> 
   filter(Country %in% countries_women) |>
-  mutate(top5 = map(data, ~ head(.x, 5))) 
+  mutate(top5 = tidyr::map(data, ~ head(.x, 5))) 
 
 
 
@@ -106,7 +107,7 @@ for (country in countries_women){
 
 
 men_pivot <- data_2223 %>% 
-  filter(Gender == 'm', Country %in% countries_men) %>%
+  filter(Gender == 'm') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
@@ -116,7 +117,7 @@ men_pivot <- data_2223 %>%
          paste0(rep(c("avg_score_", "var_score_"), 8), sort(rep(apparatus_men,2))))
 
 women_pivot <- data_2223 %>% 
-  filter(Gender == 'w', Country %in% countries_women) %>%
+  filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
@@ -127,13 +128,13 @@ women_pivot <- data_2223 %>%
          paste0(rep(c("avg_score_", "var_score_"), 4), sort(rep(apparatus_women,2))))
 
 
-men_pivot_2 <- men_pivot
+men_pivot_2 <- men_pivot %>% ungroup()
 men_pivot_2[is.na(men_pivot_2)] <- 0
-men_pivot$composite_score <- men_pivot_2$avg_score_FX + men_pivot_2$avg_score_HB + men_pivot_2$avg_score_PB + men_pivot_2$avg_score_PH + men_pivot_2$avg_score_SR + mean(na.omit(c(men_pivot$avg_score_VT, men_pivot$avg_score_VT1, men_pivot$avg_score_VT2)))
+men_pivot$composite_score <- rowSums(men_pivot_2%>% select(contains("avg_score")))
 
-women_pivot_2 <- women_pivot
+women_pivot_2 <- women_pivot %>% ungroup()
 women_pivot_2[is.na(women_pivot_2)] <- 0
-women_pivot$composite_score <- women_pivot_2$avg_score_BB + women_pivot_2$avg_score_FX + women_pivot_2$avg_score_UB + mean(na.omit(c(women_pivot$avg_score_VT, women_pivot$avg_score_VT1, women_pivot$avg_score_VT2)))
+women_pivot$composite_score <- rowSums(women_pivot_2%>% select(contains("avg_score")))
 
 
 men_sorted <- men_pivot[order(-men_pivot$composite_score),]
@@ -141,7 +142,15 @@ women_sorted <- women_pivot[order(-women_pivot$composite_score),]
 
 teams_men <- men_sorted |> group_by(Country) |> group_nest() |> 
   filter(Country %in% countries_men) |>
-  mutate(top5 = map(data, ~ head(.x, 5)))
-teams_women <- men_sorted |> group_by(Country) |> group_nest() |> 
+  mutate(top5 = purrr::map(data, ~ head(.x, 5)))
+teams_women <- women_sorted |> group_by(Country) |> group_nest() |> 
   filter(Country %in% countries_women) |>
-  mutate(top5 = map(data, ~ head(.x, 5)))
+  mutate(top5 = purrr::map(data, ~ head(.x, 5)))
+
+teams_others_women <- men_sorted |> 
+  filter(!Country %in% countries_men) |>
+  head(n=36)
+
+teams_others_men <- men_sorted |> 
+  filter(!Country %in% countries_men) |>
+  head(n=36)

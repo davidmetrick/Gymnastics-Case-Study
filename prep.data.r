@@ -40,6 +40,8 @@ data_2223$LastName = toupper(data_2223$LastName)
 data_2223$Apparatus <- gsub("hb", "HB", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_1", "VT1", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT_2", "VT2", data_2223$Apparatus)
+data_2223$Apparatus <- gsub("VT1", "VT", data_2223$Apparatus)
+data_2223$Apparatus <- gsub("VT2", "VT", data_2223$Apparatus)
 
 data_2223$Country <- gsub("CCS", "GUA", data_2223$Country)
 data_2223$Country <- gsub("ENG", "GBR", data_2223$Country)
