@@ -309,7 +309,7 @@ m_team_qual_2 <- men_team %>% anti_join(top2_men) %>%
 
 # Simulate team competition by picking top 3 competitors per event per team
 # and sum them up ("4 up 3 count")
-team_qual_m <- rbind(men_team %>% semi_join(aa_men), m_team_qual_2) %>%
+team_qual_m <- rbind(men_team %>% semi_join(top2_men), m_team_qual_2) %>%
   group_by(Country, apparatus) %>% slice_max(sim, n = 3, with_ties = F) %>%
   summarise(score = sum(sim)) %>% group_by(Country) %>% 
   summarise(score = sum(score))
