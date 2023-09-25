@@ -194,7 +194,7 @@ for(country in teams_women$Country){
     event_data = rbind(top2_event,bot3_event)
     
     ## change hard coding later
-    event_data$sim_score = rnorm(4,unlist(event_data[,3]),unlist(event_data[,4]))
+    event_data$sim_score = rnorm(4,unlist(event_data[,3]),sqrt(unlist(event_data[,4])))
     event_data$Country = country
     event_data$event = event
 
