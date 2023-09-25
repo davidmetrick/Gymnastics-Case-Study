@@ -40,12 +40,7 @@ options(dplyr.summarise.inform = FALSE)
 #            arrange(desc(avg_score)))
 # }
 # 
-# # Choosing 12 countries for the men and women 
-# countries_men <- c('CHN', 'JPN', 'GBR', 'ITA', 'USA', 'ESP', 
-#                    'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
-# 
-# countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN', 
-#                      'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+
 # 
 # #Now we display the top 5 athletes from the US for each of the events
 # 
@@ -103,59 +98,65 @@ options(dplyr.summarise.inform = FALSE)
 
 ####################
 
-# New format 
+# Choosing 12 countries for the men and women
+countries_men <- c('CHN', 'JPN', 'GBR', 'ITA', 'USA', 'ESP',
+                   'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
 
+countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
+                     'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
 
-men_pivot <- data_2223 %>% 
+# Create combined tables with avg/sd scores for each apparatus for each athlete
+
+men_df <- data_2223 %>% 
   filter(Gender == 'm') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
             Country=Country[1]) %>%
-  arrange(var_score)%>%
-  head(-floor(nrow(.)/15))%>%
-  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score)) %>%
+  arrange(var_score) %>%
+  head(-floor(nrow(.)/15)) %>%
+  pivot_wider(names_from = Apparatus, values_from = c(avg_score, var_score)) %>%
   select("FirstName", "LastName", "Country", 
-         paste0(rep(c("avg_score_", "var_score_"), 8), sort(rep(apparatus_men,2))))
+         paste0(rep(c("avg_score_", "var_score_"), 8), 
+                sort(rep(apparatus_men,2)))) %>% ungroup()
 
-women_pivot <- data_2223 %>% 
+women_df <- data_2223 %>% 
   filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,var(Score)),
             Country=Country[1]) %>%
-  arrange(var_score)%>%
-  head(-floor(nrow(.)/15))%>%
-  pivot_wider(names_from = c(Apparatus), values_from = c(avg_score, var_score),
+  arrange(var_score) %>%
+  head(-floor(nrow(.)/15)) %>%
+  pivot_wider(names_from = Apparatus, values_from = c(avg_score, var_score),
               names_sort = T) %>%
   select("FirstName", "LastName", "Country", 
-         paste0(rep(c("avg_score_", "var_score_"), 4), sort(rep(apparatus_women,2))))
+         paste0(rep(c("avg_score_", "var_score_"), 4), 
+                sort(rep(apparatus_women,2)))) %>% ungroup()
 
 
-men_pivot_2 <- men_pivot %>% ungroup()
-men_pivot_2[is.na(men_pivot_2)] <- 0
-men_pivot$composite_score <- rowSums(men_pivot_2%>% select(contains("avg_score")))
+# Fill in NAs and sum up composite score, order by composite score 
+men_df[is.na(men_df)] <- 0
+men_df$composite_score <- rowSums(men_df%>% select(contains("avg_score")))
+men_df <- men_df %>% arrange(desc(composite_score))
 
-women_pivot_2 <- women_pivot %>% ungroup()
-women_pivot_2[is.na(women_pivot_2)] <- 0
-women_pivot$composite_score <- rowSums(women_pivot_2%>% select(contains("avg_score")))
+women_df[is.na(women_df)] <- 0
+women_df$composite_score <- rowSums(women_df%>% select(contains("avg_score")))
+women_df <- women_df %>% arrange(desc(composite_score))
 
-
-men_sorted <- men_pivot[order(-men_pivot$composite_score),]
-women_sorted <- women_pivot[order(-women_pivot$composite_score),]
-
-teams_men <- men_sorted |> group_by(Country) |> group_nest() |> 
+teams_men <- men_df |> group_by(Country) |> group_nest() |> 
   filter(Country %in% countries_men) |>
   mutate(top5 = purrr::map(data, ~ head(.x, 5)))
-teams_women <- women_sorted |> group_by(Country) |> group_nest() |> 
+
+teams_women <- women_df |> group_by(Country) |> group_nest() |> 
   filter(Country %in% countries_women) |>
   mutate(top5 = purrr::map(data, ~ head(.x, 5)))
 
-teams_others_women <- women_sorted |> 
+teams_others_women <- women_df |> 
   filter(!Country %in% countries_women) |>
   head(n=36)
 
-teams_others_men <- men_sorted |> 
+teams_others_men <- men_df |> 
   filter(!Country %in% countries_men) |>
   head(n=36)
 
@@ -165,60 +166,79 @@ teams_others_men <- men_sorted |>
 # with the rest
 
 # first simulate the individual events
+
 qualifying_scores_women <- data.frame(matrix(ncol = 5, nrow = 0))
-colnames(qualifying_scores_women) <- c("FirstName","LastName","Country","Event","sim_score")
+colnames(qualifying_scores_women) <- c("FirstName","LastName","Country",
+                                       "Event","sim_score")
 
-team_aa_qualifying = data.frame(matrix(ncol = 2, nrow = 0))
-colnames(team_aa_qualifying) <- c("Country","sim_score")
-
-# qualifying_scores_women = qualifying_scores_women %>% 
-#   group_by(apparatus_women) %>% group_nest() %>%
-#   data.frame(matrix(ncol = 3, nrow = 0))
+team_aa_qualifying <- data.frame("Country" = teams_women$Country,
+                                 "score" = 0)
 
 #simulate countries
 for(country in teams_women$Country){
+  
+  print(country)
   team = (teams_women%>% filter(Country == country))$top5[[1]]
-  top2 = team%>% head(2)
+  top2 = team %>% head(2)
   bot3 = team %>% tail(3)
-  aa_team_score = data.frame(Country = country,score=0)
+  
   for(event in apparatus_women){
     top2_event = top2%>%select(FirstName,LastName,contains(event))
-    bot3_event_ordered = bot3 %>%arrange(desc((eval(as.name(
-      paste0("avg_score_",event)
-    ))))) %>%head(2)
-    bot3_event = bot3_event_ordered%>%select(FirstName,LastName,contains(event))
+    bot3_event_ordered = bot3 %>%
+      arrange(desc((eval(as.name(paste0("avg_score_",event)))))) %>% 
+      head(2)
+    
+    bot3_event = bot3_event_ordered %>% 
+      select(FirstName,LastName,contains(event))
+    
     event_data = rbind(top2_event,bot3_event)
     
     ## change hard coding later
     event_data$sim_score = rnorm(4,unlist(event_data[,3]),unlist(event_data[,4]))
     event_data$Country = country
     event_data$event = event
-    
-    qualifying_scores_women= rbind(qualifying_scores_women,
+
+    # Think of how to restructure 
+    qualifying_scores_women = rbind(qualifying_scores_women,
           event_data%>%select(FirstName,LastName,Country,event,sim_score))
     
-    team_event_qual_score = sum(event_data %>% arrange(desc(sim_score)) %>% head(3) %>%select(sim_score))
-    aa_team_score$score=aa_team_score$score+team_event_qual_score
+    
+    team_event_qual_score = sum(event_data %>% arrange(desc(sim_score)) %>%
+                                  head(3) %>%select(sim_score))
+    
+    # add event score to team score 
+    team_aa_qualifying <- team_aa_qualifying %>% 
+      mutate(score = ifelse(Country == country, 
+                            score + team_event_qual_score, 
+                            score ))
   }
-  team_aa_qualifying = rbind(team_aa_qualifying,aa_team_score)
 }
+
+
 #simulate individuals
-for(event in apparatus_women){
-  others_women_ordered= teams_others_women%>%
-    arrange(desc((eval(as.name(
-      paste0("avg_score_",event)
-    )))))
-  others_women_event = others_women_ordered%>%select(FirstName,LastName,Country,contains(event))
-  others_women_event$sim_score = rnorm(nrow(others_women_event)
-                                       ,unlist(others_women_event[,4]),unlist(others_women_event[,5]))
+for (event in apparatus_women){
+  
+  others_women_ordered = teams_others_women %>%
+    arrange(desc((eval(as.name(paste0("avg_score_",event))))))
+  
+  others_women_event = others_women_ordered %>% 
+    select(FirstName,LastName,Country,contains(event))
+  
+  others_women_event$sim_score = rnorm(nrow(others_women_event),
+                                       unlist(others_women_event[,4]),
+                                       unlist(others_women_event[,5]))
   others_women_event$event = event
   qualifying_scores_women= rbind(qualifying_scores_women,
-                                 others_women_event%>%select(FirstName,LastName,Country,event,sim_score) )
+                                 others_women_event %>% 
+                                   select(FirstName, LastName, 
+                                          Country, event, sim_score))
 }
-order_sim = function(data){
-  return(arrange(data,desc(sim_score)))
-}
-qualifying_scores_women=qualifying_scores_women%>%group_by(event)%>%
+
+# order_sim = function(data){
+#   return(arrange(data,desc(sim_score)))
+# }
+
+qualifying_scores_women = qualifying_scores_women %>% group_by(event)%>%
   arrange(desc(sim_score)) %>% group_nest()
 
 get_qualifiers_ind = function(data,n=8){
@@ -243,8 +263,70 @@ aa_qualified = get_qualifiers_ind(aa_athletes,24)
 # TEAM all around
 
 team_aa_qualifying = team_aa_qualifying %>% arrange(desc(score))
-team_aa_qualified =team_aa_qualifying %>% arrange(desc(score))%>%head(8)
+team_aa_qualified = team_aa_qualifying %>% arrange(desc(score))%>%head(8)
 
 qualified
 aa_qualified
 team_aa_qualified
+
+
+
+#######
+
+# New version for men
+
+# Get all male competitors (teams + additional individuals)
+comp_men <- rbind(teams_men %>% unnest(top5) %>% select(-data),
+                  teams_others_men)
+
+# Getting simulated scores for each apparatus per person
+m_sim <- inner_join(
+  comp_men %>% select(FirstName, LastName, Country, composite_score, contains('avg')) %>%
+  pivot_longer(cols = contains('avg'), 
+               names_to = 'apparatus', 
+               names_prefix = 'avg_score_',
+               values_to = 'avg'),
+  comp_men %>% select(FirstName, LastName, Country, composite_score, contains('var')) %>%
+    pivot_longer(cols = contains('var'), 
+                 names_to = 'apparatus', 
+                 names_prefix = 'var_score_',
+                 values_to = 'var'),
+  by = join_by(FirstName, LastName, Country, composite_score, apparatus)
+  ) %>% mutate(sim = rnorm(n(), avg, sqrt(var))) 
+
+# Only men who compete as part of the team
+men_team <- m_sim %>% filter(Country %in% countries_men) 
+
+# The top 2 best men per country are kept to compete in everything 
+top2_men <- men_team %>% select(FirstName, LastName, Country, composite_score) %>%
+  unique() %>% group_by(Country) %>% 
+  slice_max(composite_score, n=2, with_ties = F)
+
+# pick best 2 out of the remaining 3 men per team
+m_team_qual_2 <- men_team %>% anti_join(top2_men) %>% 
+  group_by(Country, apparatus) %>%
+  slice_max(sim, n = 2, with_ties = F) 
+
+# Simulate team competition by picking top 3 competitors per event per team
+# and sum them up ("4 up 3 count")
+team_qual_m <- rbind(men_team %>% semi_join(aa_men), m_team_qual_2) %>%
+  group_by(Country, apparatus) %>% slice_max(sim, n = 3, with_ties = F) %>%
+  summarise(score = sum(sim)) %>% group_by(Country) %>% 
+  summarise(score = sum(score))
+
+# All around qualifier 
+# Find men who competed in everything and sort by summed score
+aa_qual_m <- m_sim %>% group_by(FirstName, LastName, Country) %>%
+  filter(n() == 6) %>% summarise(sum_score = sum(sim)) %>% 
+  arrange(desc(sum_score)) %>% group_by(Country) %>% 
+  slice_max(sum_score, n = 2, with_ties = F) %>% 
+  arrange(desc(sum_score)) %>% head(24) 
+
+event_qual_m <- m_sim %>% group_by(Country, apparatus) %>% 
+  slice_max(sim, n = 2, with_ties = F) %>% group_by(apparatus) %>%
+  slice_max(sim, n = 8, with_ties = F) %>%
+  arrange(apparatus, desc(sim)) %>% 
+  select(FirstName, LastName, Country, apparatus, sim)
+  
+team_final_m <- team_qual_m %>% arrange(desc(score)) %>% head(8)
+team_final_m
