@@ -95,10 +95,10 @@ convertDate <- function(daterange){
   }
   return(c(paste(startDate),paste(endDate)))
 }
-startDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[1]),use.names = F)
-endDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[2]),use.names = F)
-data_2223$StartDate = startDates
-data_2223$EndDate = endDates
+# startDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[1]),use.names = F)
+# endDates = unlist(lapply(data_2223$Date,function(x) convertDate(x)[2]),use.names = F)
+# data_2223$StartDate = startDates
+# data_2223$EndDate = endDates
 
 
 # Split data by gender

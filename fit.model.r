@@ -134,6 +134,24 @@ women_df <- data_2223 %>%
          paste0(rep(c("avg_score_", "var_score_"), 4), 
                 sort(rep(apparatus_women,2)))) %>% ungroup()
 
+men_df_unpivot = inner_join(men_df %>% select(FirstName, LastName, Country, contains('avg')) %>% 
+  pivot_longer(cols = contains('avg'), 
+               names_to = 'apparatus', 
+               names_prefix = 'avg_score_',
+               values_to = 'avg'),
+  men_df %>% select(FirstName, LastName, Country,contains('var')) %>% 
+    pivot_longer(cols = contains('var'), 
+                 names_to = 'apparatus', 
+                 names_prefix = 'var_score_',
+                 values_to = 'var')
+)
+
+a=test %>% filter(Country %in% countries_men) %>% 
+  group_by(Country,Apparatus)%>% slice_max(avg_score,n=10,with_ties = F) %>%ungroup()%>%
+  select(FirstName,LastName,Country)%>%unique()
+
+table(a$Country)
+
 
 # Fill in NAs and sum up composite score, order by composite score 
 men_df[is.na(men_df)] <- 0
