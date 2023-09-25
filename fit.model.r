@@ -334,7 +334,7 @@ team_qual_m <- rbind(men_team %>% semi_join(top2_men), m_team_qual_2) %>%
 
 # All around qualifier 
 # Find men who competed in everything and sort by summed score
-aa_qual_m <- rbind(men_team %>% semi_join(aa_men), m_team_qual_2) %>% 
+aa_qual_m <- rbind(men_team %>% semi_join(top2_men), m_team_qual_2) %>% 
   group_by(FirstName, LastName, Country) %>%
   filter(n() == 6) %>% summarise(sum_score = sum(sim)) %>% 
   arrange(desc(sum_score)) %>% group_by(Country) %>% 
@@ -350,3 +350,19 @@ event_qual_m <- m_sim %>% group_by(Country, apparatus) %>%
   
 team_final_m <- team_qual_m %>% arrange(desc(score)) %>% head(8)
 team_final_m
+
+############
+men_test <- data_2223 %>% 
+  filter(Gender == 'm', Country %in% countries_men) %>%
+  group_by(FirstName, LastName, Country, Apparatus) %>% 
+  summarize(avg_score = mean(Score,na.rm=T),
+            var_score = ifelse(is.na(var(Score)),0,var(Score)),
+            Country=Country[1]) %>%
+  arrange(var_score) %>%
+  head(-floor(nrow(.)/15)) %>% 
+  group_by(Country, Apparatus) %>%
+  slice_max(avg_score, n = 10, with_ties = F) %>% ungroup() %>%
+  select(FirstName, LastName, Country) %>%
+  unique()
+
+table(men_test$Country)
