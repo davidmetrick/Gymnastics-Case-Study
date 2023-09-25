@@ -316,7 +316,7 @@ team_qual_m <- rbind(men_team %>% semi_join(top2_men), m_team_qual_2) %>%
 
 # All around qualifier 
 # Find men who competed in everything and sort by summed score
-aa_qual_m <- rbind(men_team %>% semi_join(aa_men), m_team_qual_2) %>% 
+aa_qual_m <- rbind(men_team %>% semi_join(top2_men), m_team_qual_2) %>% 
   group_by(FirstName, LastName, Country) %>%
   filter(n() == 6) %>% summarise(sum_score = sum(sim)) %>% 
   arrange(desc(sum_score)) %>% group_by(Country) %>% 
