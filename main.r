@@ -4,10 +4,10 @@
 
 ## It reads data and generates all outputs.
 
-source('R/get.data.r')
+source('get.data.r')
 
-source('R/prep.data.r')
+source('prep.data.r')
 
-source('R/fit.model.r')
+source('fit.model.r')
 
 ## etc
