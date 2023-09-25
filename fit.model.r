@@ -358,17 +358,17 @@ team_final_m <- team_qual_m %>% arrange(desc(score)) %>% head(8)
 team_final_m
 
 ############
-men_top10 <- men_df_unpivot %>% 
+men_top5 <- men_df_unpivot %>% 
   group_by(Country, Apparatus) %>%
   slice_max(avg_score, n = 5, with_ties = F) %>% ungroup() %>%
   select(FirstName, LastName, Country) %>%
   unique()
 
-women_top10 <- women_df_unpivot %>% 
+women_top5 <- women_df_unpivot %>% 
   group_by(Country, Apparatus) %>%
   slice_max(avg_score, n = 5, with_ties = F) %>% ungroup() %>%
   select(FirstName, LastName, Country) %>%
   unique()
 
-table(men_top10$Country)
-table(women_top10$Country)
+table(men_top5$Country)
+table(women_top5$Country)
