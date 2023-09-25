@@ -107,6 +107,24 @@ countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
 
 # Create combined tables with avg/sd scores for each apparatus for each athlete
 
+men_df_unpivot = men_df <- data_2223 %>% 
+  filter(Gender == 'm', Country %in% countries_men) %>%
+  group_by(FirstName, LastName, Country, Apparatus) %>% 
+  summarize(avg_score = mean(Score,na.rm=T),
+            var_score = ifelse(is.na(var(Score)),0,var(Score)),
+            Country=Country[1]) %>%
+  arrange(var_score) %>%
+  head(-floor(nrow(.)/15))
+
+women_df_unpivot = men_df <- data_2223 %>% 
+  filter(Gender == 'w', Country %in% countries_women) %>%
+  group_by(FirstName, LastName, Country, Apparatus) %>% 
+  summarize(avg_score = mean(Score,na.rm=T),
+            var_score = ifelse(is.na(var(Score)),0,var(Score)),
+            Country=Country[1]) %>%
+  arrange(var_score) %>%
+  head(-floor(nrow(.)/15))
+
 men_df <- data_2223 %>% 
   filter(Gender == 'm') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
@@ -133,18 +151,6 @@ women_df <- data_2223 %>%
   select("FirstName", "LastName", "Country", 
          paste0(rep(c("avg_score_", "var_score_"), 4), 
                 sort(rep(apparatus_women,2)))) %>% ungroup()
-
-men_df_unpivot = inner_join(men_df %>% select(FirstName, LastName, Country, contains('avg')) %>% 
-  pivot_longer(cols = contains('avg'), 
-               names_to = 'apparatus', 
-               names_prefix = 'avg_score_',
-               values_to = 'avg'),
-  men_df %>% select(FirstName, LastName, Country,contains('var')) %>% 
-    pivot_longer(cols = contains('var'), 
-                 names_to = 'apparatus', 
-                 names_prefix = 'var_score_',
-                 values_to = 'var')
-)
 
 a=test %>% filter(Country %in% countries_men) %>% 
   group_by(Country,Apparatus)%>% slice_max(avg_score,n=10,with_ties = F) %>%ungroup()%>%
@@ -352,17 +358,17 @@ team_final_m <- team_qual_m %>% arrange(desc(score)) %>% head(8)
 team_final_m
 
 ############
-men_test <- data_2223 %>% 
-  filter(Gender == 'm', Country %in% countries_men) %>%
-  group_by(FirstName, LastName, Country, Apparatus) %>% 
-  summarize(avg_score = mean(Score,na.rm=T),
-            var_score = ifelse(is.na(var(Score)),0,var(Score)),
-            Country=Country[1]) %>%
-  arrange(var_score) %>%
-  head(-floor(nrow(.)/15)) %>% 
+men_top10 <- men_df_unpivot %>% 
   group_by(Country, Apparatus) %>%
-  slice_max(avg_score, n = 10, with_ties = F) %>% ungroup() %>%
+  slice_max(avg_score, n = 5, with_ties = F) %>% ungroup() %>%
   select(FirstName, LastName, Country) %>%
   unique()
 
-table(men_test$Country)
+women_top10 <- women_df_unpivot %>% 
+  group_by(Country, Apparatus) %>%
+  slice_max(avg_score, n = 5, with_ties = F) %>% ungroup() %>%
+  select(FirstName, LastName, Country) %>%
+  unique()
+
+table(men_top10$Country)
+table(women_top10$Country)
