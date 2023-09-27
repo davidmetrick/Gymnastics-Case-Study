@@ -28,9 +28,10 @@ data_2223
 # first name and last name and country matches for a person
 data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), 
                      sep = "^\\S*\\K\\s+")
-
 #Removing all accents
-data_2223 <- apply(data_2223,2,function(x) stringi::stri_trans_general(x, "Latin-ASCII") ) %>% as.data.frame()
+data_2223$LastName <- stri_trans_general(data_2223$LastName, "Latin-ASCII")
+data_2223$FirstName <- stri_trans_general(data_2223$FirstName, "Latin-ASCII")
+
 
 # Convert all names to upper case
 data_2223$FirstName = toupper(data_2223$FirstName)
