@@ -28,9 +28,10 @@ data_2223
 # first name and last name and country matches for a person
 data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), 
                      sep = "^\\S*\\K\\s+")
-
 #Removing all accents
-apply(data_2223,2,function(x) stringi::stri_trans_general(x, "Latin-ASCII") )
+data_2223$LastName <- stri_trans_general(data_2223$LastName, "Latin-ASCII")
+data_2223$FirstName <- stri_trans_general(data_2223$FirstName, "Latin-ASCII")
+
 
 # Convert all names to upper case
 data_2223$FirstName = toupper(data_2223$FirstName)
@@ -105,30 +106,11 @@ convertDate <- function(daterange){
 men <- data_2223[data_2223$Gender == "m",]
 women <- data_2223[data_2223$Gender == "w",]
 
-# Further split data by event (so split is now by event by gender)
-apparatus_men = sort(unique(men$Apparatus))
-apparatus_group_men = men %>% group_by(Apparatus)
-events_m = group_split(apparatus_group_men)
-for(event in events_m){
-  assign(paste(event$Apparatus[1],"m",sep="_"), event)
-}
-
-apparatus_women = sort(unique(women$Apparatus))
-apparatus_group_women = women %>% group_by(Apparatus)
-events_w = group_split(apparatus_group_women)
-for(event in events_w){
-  assign(paste(event$Apparatus[1],"w",sep="_"), event)
-}
-
-# the names of the events for the different genders, we access the event data
-# by gender by indicating the event and gender e.g. 'VT_w'
-apparatus_men
-apparatus_women
 
 
 # Find athletes with missing countries to fill later by matching with existing athletes
 data_2223 = data_2223 %>% group_by(FirstName,LastName) %>% 
   mutate(Country = sort(Country,decreasing=T)[1])
 
-data_2223 |> filter(Country == '') |> select(LastName, FirstName, Country) |>
-  unique()
+
+
