@@ -152,13 +152,6 @@ women_df <- data_2223 %>%
          paste0(rep(c("avg_score_", "var_score_"), 4), 
                 sort(rep(apparatus_women,2)))) %>% ungroup()
 
-a=test %>% filter(Country %in% countries_men) %>% 
-  group_by(Country,Apparatus)%>% slice_max(avg_score,n=10,with_ties = F) %>%ungroup()%>%
-  select(FirstName,LastName,Country)%>%unique()
-
-table(a$Country)
-
-
 # Fill in NAs and sum up composite score, order by composite score 
 men_df[is.na(men_df)] <- 0
 men_df$composite_score <- rowSums(men_df%>% select(contains("avg_score")))
