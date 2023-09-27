@@ -6,6 +6,7 @@
 library(dplyr)
 library(purrr)
 library(tidyr)
+library(kit)
 options(dplyr.summarise.inform = FALSE)
 
 # Choosing 12 countries for the men and women
@@ -275,3 +276,16 @@ women_top5 <- women_df_unpivot %>%
 
 table(men_top5$Country)
 table(women_top5$Country)
+
+get_medal_probs <- function(means, variances){
+  nsims = 1000
+  num_athletes = length(means)
+  prob_medal = data.frame(replicate(3,rep(0,num_athletes)))
+  names(prob_medal) = c("bronze","silver","gold")
+  for(i in 1:nsims){
+    sim_scores = rnorm(num_athletes,means,sqrt(variances))
+    top_3_athletes = kit::topn(sim_scores,n=3)
+    prob_medal[cbind(top_3_athletes,3:1)] = prob_medal[cbind(top_3_athletes,3:1)] + 1
+  }
+  return(prob_medal/nsims)
+}
