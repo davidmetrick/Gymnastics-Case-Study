@@ -275,3 +275,16 @@ women_top5 <- women_df_unpivot %>%
 
 table(men_top5$Country)
 table(women_top5$Country)
+
+men_top5 <- dplyr::left_join(men_top5, men_df)
+women_top5 <- dplyr::left_join(women_top5, women_df)
+
+men_top5_country_groups <- men_top5 %>% group_by(Country)
+men_top5_countries <- group_split(men_top5_country_groups)
+
+names(men_top5_countries) <- c("BRA", "CAN", "CHN", "ESP", "GBR", "GER", "HUN", "ITA", "JPN", "KOR", "TUR", "USA")
+
+women_top5_country_groups <- women_top5 %>% group_by(Country)
+women_top5_countries <- group_split(women_top5_country_groups)
+
+names(women_top5_countries) <- c("BEL", "BRA", "CAN", "CHN", "FRA", "GBR", "HUN", "ITA", "JPN", "NED", "ROU", "USA")
