@@ -15,6 +15,8 @@ countries_men <- c('CHN', 'JPN', 'GBR', 'ITA', 'USA', 'ESP',
 
 countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
                      'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+apparatus_men = sort(unique(men$Apparatus))
+apparatus_women = sort(unique(women$Apparatus))
 
 # Create combined tables with avg/sd scores for each apparatus for each athlete
 
@@ -301,3 +303,4 @@ women_top5_country_groups <- women_top5 %>% group_by(Country)
 women_top5_countries <- group_split(women_top5_country_groups)
 
 names(women_top5_countries) <- c("BEL", "BRA", "CAN", "CHN", "FRA", "GBR", "HUN", "ITA", "JPN", "NED", "ROU", "USA")
+
