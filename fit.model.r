@@ -280,7 +280,7 @@ table(men_top5$Country)
 table(women_top5$Country)
 
 get_medal_probs <- function(means, variances){
-  nsims = 1000
+  nsims = 10000
   num_athletes = length(means)
   prob_medal = data.frame(replicate(3,rep(0,num_athletes)))
   names(prob_medal) = c("bronze","silver","gold")
@@ -303,4 +303,3 @@ women_top5_country_groups <- women_top5 %>% group_by(Country)
 women_top5_countries <- group_split(women_top5_country_groups)
 
 names(women_top5_countries) <- c("BEL", "BRA", "CAN", "CHN", "FRA", "GBR", "HUN", "ITA", "JPN", "NED", "ROU", "USA")
-

@@ -94,7 +94,7 @@ team_pick <- function(country_df, others_df){
     # Repeat lots of times!!
     for (j in 1:n){
       # Simulate everyone's score for qualifier round
-      qual <- roster %>% ungroup() %>% mutate(sim = rnorm(n(), avg_score, var_score)) 
+      qual <- roster %>% ungroup() %>% mutate(sim = rnorm(n(), avg_score, sqrt(var_score))) 
       
       # Team round:
       # Choose best 3 for apparatus (Dumb way of picking top 3 for now)
