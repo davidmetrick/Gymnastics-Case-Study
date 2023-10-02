@@ -132,11 +132,11 @@ team_pick <- function(country_df, others_df){
   # Data frame to give expected number of medals for each combination
   # --------SC-------
   # I'm going to comment this out - keeping track of best instead of having another large df  might be better
-  if (c == "USA") { # Need to get this working for next part (deliverable)
-    usa_df <<- data.frame(matrix(nrow = nrow(comb), ncol = 2))
-    
-    colnames(usa_df) <- c('comb', 'medals')
-  }
+  
+  medal_scores <- data.frame(matrix(nrow = nrow(comb), ncol = 9))
+  colnames(medal_scores) <- c('team_g', 'team_s', 'team_b',
+                              'aa_g', 'aa_s', 'aa_b',
+                              'event_g', 'event_s', 'event_b')
   
   # Run each combination through function to get # of medals
   bestmedals <- 0
@@ -161,6 +161,11 @@ team_pick <- function(country_df, others_df){
     }
     
     # Make dataframe of how many medals are earned in each simulation
+    medals <- data.frame(matrix(nrow = n, ncol = 9))
+    colnames(medals) <- c('team_g', 'team_s', 'team_b',
+                          'aa_g', 'aa_s', 'aa_b',
+                          'event_g', 'event_s', 'event_b')
+    
     ## --------SC-------
     # I'm replacing dataframe with single vector we add to add end of loop
     medals <- rep(0,9)
@@ -205,6 +210,16 @@ team_pick <- function(country_df, others_df){
     # aa_g aa_s aa_b 
     # event_g event_s event_b (summing all apparatuses for now since it doesn't matter)
     
+    medals[j,] <- c(team_comp[1, 'Country'] == c,
+                    team_comp[2, 'Country'] == c,
+                    team_comp[3, 'Country'] == c,
+                    ind_aa[1, 'Country'] == c,
+                    ind_aa[2, 'Country'] == c,
+                    ind_aa[3, 'Country'] == c,
+                    nrow(event_fin %>% filter(Country == c, place == 1)),
+                    nrow(event_fin %>% filter(Country == c, place == 2)),
+                    nrow(event_fin %>% filter(Country == c, place == 3)))
+    
     # --------SC-------
     # Only need to filter by country once, don't need to do it 3 times
     country_event_fin = event_fin %>% filter(Country == c)
@@ -218,10 +233,6 @@ team_pick <- function(country_df, others_df){
                     nrow(country_event_fin %>% filter(place == 3)))
     }
     
-    if (c == "USA") {
-      usa_df[i,1] <- comb[i]
-      usa_df[i,2] <- sum(medals/n)
-    }
     # Average up medals over n trials to get expected # of medals
     if( sum(medals/n) > bestmedals){
       bestmedals <- sum(medals/n) 
@@ -231,6 +242,9 @@ team_pick <- function(country_df, others_df){
   # returns dataframe of ideal team
   # Right now just summing up total expected medals but could put in weights
   # (weight G/S/B differently and/or weight team/AA/event differently )
+  
+  usa_df <<- usa_df
+  
   return(bestcomb)
 }
 
