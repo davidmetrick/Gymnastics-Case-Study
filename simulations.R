@@ -231,6 +231,8 @@ team_pick <- function(country_df, others_df){
     }
     
     # Average up medals over n trials to get expected # of medals
+    medal_scores[i,] <- colMeans(medals)
+    
     if( sum(medals/n) > bestmedals){
       bestmedals <- sum(medals/n) 
       bestcomb = comb[i]
