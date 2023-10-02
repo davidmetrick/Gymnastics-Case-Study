@@ -168,10 +168,10 @@ team_pick <- function(country_df, others_df){
     
     ## --------SC-------
     # I'm replacing dataframe with single vector we add to add end of loop
-    medals <- rep(0,9)
-    names(medals) <- c('team_g', 'team_s', 'team_b',
-                          'aa_g', 'aa_s', 'aa_b',
-                          'event_g', 'event_s', 'event_b')
+    #medals <- rep(0,9)
+    #names(medals) <- c('team_g', 'team_s', 'team_b',
+    #                      'aa_g', 'aa_s', 'aa_b',
+    #                      'event_g', 'event_s', 'event_b')
    
     # Repeat lots of times!!
     for (j in 1:n){
@@ -209,28 +209,25 @@ team_pick <- function(country_df, others_df){
     # team_gold team_silv team_bronze
     # aa_g aa_s aa_b 
     # event_g event_s event_b (summing all apparatuses for now since it doesn't matter)
-    
-    medals[j,] <- c(team_comp[1, 'Country'] == c,
-                    team_comp[2, 'Country'] == c,
-                    team_comp[3, 'Country'] == c,
-                    ind_aa[1, 'Country'] == c,
-                    ind_aa[2, 'Country'] == c,
-                    ind_aa[3, 'Country'] == c,
-                    nrow(event_fin %>% filter(Country == c, place == 1)),
-                    nrow(event_fin %>% filter(Country == c, place == 2)),
-                    nrow(event_fin %>% filter(Country == c, place == 3)))
-    
-    # --------SC-------
-    # Only need to filter by country once, don't need to do it 3 times
     country_event_fin = event_fin %>% filter(Country == c)
     country_event_fin = country_event_fin %>% filter(place<=3)
-    # --------SC-------
-    # just checking all medals at the same time
-    medals <- medals + c(as.numeric(team_comp[1:3,'Country']==c),
-                         as.numeric(ind_aa[1:3,'Country']==c),
+    medals[j,] <- c(as.numeric(team_comp[1:3,'Country']==c),
+                    as.numeric(ind_aa[1:3,'Country']==c),
                     nrow(country_event_fin%>% filter(place == 1)),
                     nrow(country_event_fin %>% filter(place == 2)),
                     nrow(country_event_fin %>% filter(place == 3)))
+    
+    # # --------SC-------
+    # # Only need to filter by country once, don't need to do it 3 times
+    # country_event_fin = event_fin %>% filter(Country == c)
+    # country_event_fin = country_event_fin %>% filter(place<=3)
+    # # --------SC-------
+    # # just checking all medals at the same time
+    # medals <- medals + c(as.numeric(team_comp[1:3,'Country']==c),
+    #                      as.numeric(ind_aa[1:3,'Country']==c),
+    #                 nrow(country_event_fin%>% filter(place == 1)),
+    #                 nrow(country_event_fin %>% filter(place == 2)),
+    #                 nrow(country_event_fin %>% filter(place == 3)))
     }
     
     # Average up medals over n trials to get expected # of medals
@@ -243,7 +240,6 @@ team_pick <- function(country_df, others_df){
   # Right now just summing up total expected medals but could put in weights
   # (weight G/S/B differently and/or weight team/AA/event differently )
   
-  usa_df <<- usa_df
   
   return(bestcomb)
 }
