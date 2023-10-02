@@ -10,4 +10,6 @@ source('prep.data.r')
 
 source('fit.model.r')
 
+# add or replace with simulations.R?
+
 ## etc

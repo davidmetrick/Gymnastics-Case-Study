@@ -2,7 +2,9 @@
 options("dplyr.summarise.inform" = F)
 
 # Choosing 12 countries for the men and women
-countries_men <- c('CHN', 'JPN', 'GBR', 'ITA', 'USA', 'ESP',
+# For the men, USA was originally between ITA and ESP; moving them to the front to allow for the simulation algorithm to select them last
+
+countries_men <- c('USA', 'CHN', 'JPN', 'GBR', 'ITA', 'ESP',
                    'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
 
 countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
@@ -129,11 +131,11 @@ team_pick <- function(country_df, others_df){
   # Data frame to give expected number of medals for each combination
   # --------SC-------
   # I'm going to comment this out - keeping track of best instead of having another large df  might be better
-  #medal_scores <- data.frame(matrix(nrow = nrow(comb), ncol = 9))
-  
-  # colnames(medal_scores) <- c('team_g', 'team_s', 'team_b',
-  #                       'aa_g', 'aa_s', 'aa_b',
-  #                       'event_g', 'event_s', 'event_b')
+  if (c == "USA") { # Need to get this working for next part (deliverable)
+    usa_df <- data.frame(matrix(nrow = nrow(comb), ncol = 2))
+    
+    colnames(usa_df) <- c('comb', 'medals')
+  }
   
   # Run each combination through function to get # of medals
   
@@ -217,6 +219,11 @@ team_pick <- function(country_df, others_df){
                     nrow(country_event_fin %>% filter(place == 2)),
                     nrow(country_event_fin %>% filter(place == 3)))
     }
+    
+    if (c == "USA") {
+      usa_df[i,1] <- comb[i]
+      usa_df[i,2] <- sum(medals/n)
+    }
     # Average up medals over n trials to get expected # of medals
     if( sum(medals/n) > bestmedals){
       bestmedals <- sum(medals/n) 
@@ -240,7 +247,7 @@ random_teams <- men_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 men_others
 # Loop over countries one by one and go through each combination
-for (country in countries_men){
+for (country in rep(rev(countries_men), 2)){
   ptm<-proc.time()
   print(country)
   current <- men_top5 %>% filter(Country == country)
@@ -263,7 +270,7 @@ random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 
 # Loop over countries one by one and go through each combination 
-for (country in countries_women){
+for (country in rep(rev(countries_women), 2)) {
   ptm<-proc.time()
   print(country)
   current <- women_top5 %>% filter(Country == country)
