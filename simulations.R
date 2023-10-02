@@ -221,8 +221,6 @@ team_pick <- function(country_df, others_df){
     if( sum(medals/n) > bestmedals){
       bestmedals <- sum(medals/n) 
       bestcomb = comb[i]
-      print(bestmedals)
-      print(bestcomb)
     }
   }
   # returns dataframe of ideal team
