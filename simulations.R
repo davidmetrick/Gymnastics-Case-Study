@@ -266,7 +266,7 @@ for (country in rep(rev(countries_men), 2)){
 # Time to pick!
 
 # Initialize teams randomly
-random_teams <- women_top5 %>% group_by(Country) %>% sample_n(5) %>% 
+random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>% 
   left_join(women_df) %>% arrange(FirstName, LastName)
 
 team_roster <- random_teams
