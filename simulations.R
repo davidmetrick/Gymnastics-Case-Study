@@ -1,5 +1,6 @@
 # Silencing some annoying messages
 options("dplyr.summarise.inform" = F)
+library(tidyr)
 
 # Choosing 12 countries for the men and women
 # For the men, USA was originally between ITA and ESP; moving them to the front to allow for the simulation algorithm to select them last
@@ -53,7 +54,7 @@ men_others =men_all_df%>% group_by(FirstName,LastName,Country) %>%
 women_all_df = data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
   drop_na() %>%
-  filter(Gender == 'm') %>%
+  filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
@@ -61,10 +62,10 @@ women_all_df = data_2223 %>%
   arrange(var_score) %>%
   head(-floor(nrow(.)/15))
 
-women_others =men_all_df%>% group_by(FirstName,LastName,Country) %>% 
+women_others = women_all_df%>% group_by(FirstName,LastName,Country) %>% 
   summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
-  filter(!(Country %in% countries_men))%>%
-  arrange(avg_score)%>%head(36)%>% select(FirstName,LastName) %>%left_join(men_all_df)
+  filter(!(Country %in% countries_women))%>%
+  arrange(avg_score)%>%head(36)%>% select(FirstName,LastName) %>%left_join(women_all_df)
 
 
 ########
@@ -132,7 +133,7 @@ team_pick <- function(country_df, others_df){
   # --------SC-------
   # I'm going to comment this out - keeping track of best instead of having another large df  might be better
   if (c == "USA") { # Need to get this working for next part (deliverable)
-    usa_df <- data.frame(matrix(nrow = nrow(comb), ncol = 2))
+    usa_df <<- data.frame(matrix(nrow = nrow(comb), ncol = 2))
     
     colnames(usa_df) <- c('comb', 'medals')
   }
