@@ -3,7 +3,7 @@ library("foreach")
 library("doParallel")
 
 team_pick <- function(country_df, others_df){
-  n<-10 # number of simulations of athletes
+  n<-10#99 # number of simulations of athletes
   
   # Get country name
   c <- country_df[1, "Country"] %>% as.character()
@@ -134,6 +134,9 @@ team_pick <- function(country_df, others_df){
   # stop cluster
   stopCluster(cl)
   # output what the number of medals for our score was
+  if (c == "USA") {
+    print(medal_scores2/n)
+  }
   print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
 }
