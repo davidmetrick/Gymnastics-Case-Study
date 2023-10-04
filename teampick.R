@@ -13,7 +13,7 @@ team_pick <- function(country_df, others_df){
     select(FirstName, LastName) %>%
     mutate(name = paste(FirstName, LastName)) %>%
     unique() %>% select(name) %>% unlist()%>% combn(5) %>% data.frame()
-  paste("Number of combinations",ncol(comb))
+  print(paste("Number of combinations",ncol(comb)))
   
   # get a list of the athlete names from our country
   team_names<- country_df %>% select(fullname) %>% unique() %>% unlist()
@@ -23,7 +23,7 @@ team_pick <- function(country_df, others_df){
   
   # Setting up workers for parallel processing
   cl <- makeCluster(detectCores() -1)
-  registerDoParallel(cl, cores = detectCores()-1)
+  registerDoParallel(cl, cores = detectCores() -1)
   
   # looping through each of the simulations in parallel (all combinations are checked)
   # for each simulation and stores the number of medals was for each of them
