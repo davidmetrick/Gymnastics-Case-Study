@@ -23,15 +23,23 @@ library(lubridate)
 
 data_2223
 
+# Remove spaces from names
+data_2223$FirstName <- gsub(" ", "", data_2223$FirstName)
+data_2223$LastName <- gsub(" ", "", data_2223$LastName)
+
+
+#Removing all accents
+data_2223$LastName <- stri_trans_general(data_2223$LastName, "Latin-ASCII")
+data_2223$FirstName <- stri_trans_general(data_2223$FirstName, "Latin-ASCII")
+
+# Remove non A-Z characters from names
+data_2223$FirstName <- gsub("[[:punct:]]", "", data_2223$FirstName)
+data_2223$LastName <- gsub("[[:punct:]]", "", data_2223$LastName)
 
 # Split when there are spaces in between first names we are only checking when
 # first name and last name and country matches for a person
 data_2223 = separate(data_2223, FirstName, into = c("FirstName", "OtherName"), 
                      sep = "^\\S*\\K\\s+")
-#Removing all accents
-data_2223$LastName <- stri_trans_general(data_2223$LastName, "Latin-ASCII")
-data_2223$FirstName <- stri_trans_general(data_2223$FirstName, "Latin-ASCII")
-
 
 # Convert all names to upper case
 data_2223$FirstName = toupper(data_2223$FirstName)
@@ -44,6 +52,7 @@ data_2223$Apparatus <- gsub("VT_2", "VT2", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT1", "VT", data_2223$Apparatus)
 data_2223$Apparatus <- gsub("VT2", "VT", data_2223$Apparatus)
 
+# Special cases for country
 data_2223$Country <- gsub("CCS", "GUA", data_2223$Country)
 data_2223$Country <- gsub("ENG", "GBR", data_2223$Country)
 data_2223$Country <- gsub("IOM", "GBR", data_2223$Country)
@@ -53,6 +62,9 @@ data_2223$Country <- gsub("WAL", "GBR", data_2223$Country)
 data_2223$Country <- gsub("GE1", "GER", data_2223$Country)
 data_2223$Country <- gsub("GE2", "GER", data_2223$Country)
 data_2223$Country <- gsub("NIR", "IRL", data_2223$Country) # come back to this if there are new athletes cause they might not all be IRL
+
+# Special cases for individuals
+data_2223$LastName[data_2223$LastName=="ODRISCOL"]="ODRISCOLL"
 
 data_2223$outlier <- (data_2223$LastName == "BARBOSA") + (data_2223$FirstName == "JADE")
 data_2223[data_2223$outlier == 2,]$Country <- "BRA"
