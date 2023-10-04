@@ -65,7 +65,9 @@ data_2223$Country <- gsub("NIR", "IRL", data_2223$Country) # come back to this i
 
 # Special cases for individuals
 data_2223$LastName[data_2223$LastName=="ODRISCOL"]="ODRISCOLL"
-
+data_2223 = data_2223 %>% 
+  mutate(FirstName = ifelse(FirstName=="SAM"&LastName=="ZAKUTNEY","SAMUEL",FirstName))
+  
 data_2223$outlier <- (data_2223$LastName == "BARBOSA") + (data_2223$FirstName == "JADE")
 data_2223[data_2223$outlier == 2,]$Country <- "BRA"
 data_2223$outlier <- (data_2223$LastName == "DJORDJEVIC") + (data_2223$FirstName == "DUSAN")
