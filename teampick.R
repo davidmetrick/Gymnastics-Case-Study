@@ -2,9 +2,9 @@ library("parallel")
 library("foreach")
 library("doParallel")
 
-team_pick <- function(country_df, others_df, weights=rep(1,9)){
+team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   n<-99 # number of simulations of athletes
-  weights <- weights / sum(weights) # normalize to 1
+  weights <- 9*weights / sum(weights) # normalize to 9 (so medal sum normalizes to 1)
   
   # Get country name
   c <- country_df[1, "Country"] %>% as.character()
@@ -136,8 +136,10 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
   stopCluster(cl)
   # output what the number of medals for our score was
   if (c == "USA") {
-    View(medal_scores2/n)
+    write.csv(medal_scores2/n, paste("scores-", gender, ".csv"), row.names=FALSE)
+    write.csv(comb, paste0("names-", gender, ".csv"), row.names=FALSE)
   }
   print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
 }
+
