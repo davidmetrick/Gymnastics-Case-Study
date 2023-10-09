@@ -131,8 +131,9 @@ team_roster <- random_teams
 men_others
 tm = Sys.time()
 # Loop over countries one by one and go through each combination
-for (country in countries_men){
+for (country in rep(rev(countries_men), 2)){
   print(country)
+  tm2 = Sys.time()
   #current <- men_top5 %>%ungroup() %>%filter(Country == country) 
   current <- men_top5_names %>% filter(Country==country) %>%
     left_join(men_df)
@@ -143,6 +144,7 @@ for (country in countries_men){
   # Update team list with optimal team
   team_roster <- rbind(other_teams,
                        men_df %>% filter(fullname %in% unlist(best_team)))
+  print(Sys.time()-tm2)
 }
 print(Sys.time()-tm)
 ##########################
@@ -156,7 +158,7 @@ random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 tm = Sys.time()
 # Loop over countries one by one and go through each combination 
-for (country in rep(countries_women,2)){
+for (country in rep(rev(countries_women),2)){
   #ptm<-proc.time()
   print(country)
   #current <- women_top5 %>% filter(Country == country)
