@@ -4,6 +4,12 @@ library("doParallel")
 
 team_pick <- function(country_df, others_df, weights=rep(1,9)){
   n<-99 # number of simulations of athletes
+  
+  # this is only used to separate when there are two teams that perform evenly 
+  # and say there is 1 athlete that wins medals and no one else does, we introduce a 
+  # 4th & 5th place weight to break ties (on individual medals)
+  tiebreak_weight = c(0.001,0.0001)
+  weights <- c(weights,tiebreak_weight)
   weights <- weights / sum(weights) # normalize to 1
   
   # Get country name
@@ -53,7 +59,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
     # Get simulation scores for other countries and current country of interest
     other_team_sim <- qual %>% filter(Country!=c)
     current_team_sim <- qual %>% filter(Country==c)
-
+    
     # Team round:
     # We calculate the top 3 overall scores for all countries except the current country
     # of interest. Choose best 3 for apparatus (Dumb way of picking top 3 for now)
@@ -82,7 +88,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
     # Individual events: Get top 3 individual scores by event (not from country of interest)
     top3_event <- other_team_sim %>% filter(Apparatus!="AA")%>% group_by(Country, Apparatus) %>% 
       slice_max(sim, n = 2, with_ties = F) %>% # no more than 2 per country
-      ungroup() %>% group_by(Apparatus) %>% slice_max(sim, n = 3, with_ties = F)
+      ungroup() %>% group_by(Apparatus) %>% slice_max(sim, n = 5, with_ties = F)
     
     # We store the third place value by event (this lets us filter out athletes from our country of interest if they don't score this high)
     third_place = (top3_event%>% group_by(Apparatus)%>%slice_min(sim,n=1,with_ties = F))$sim
@@ -123,7 +129,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
         summarise(medals = n())%>%arrange(desc(place))%>%as.vector()
       ind_medals = event_fin_country$medals
       names(ind_medals) = event_fin_country$place
-      ind_medals= ind_medals[c("1","2","3")]
+      ind_medals= ind_medals[c("1","2","3","4","5")]
       ind_medals[is.na(ind_medals)] <- 0
       
       medal_scores[j,] <- medal_scores[j,] + c(team_medals,
@@ -136,7 +142,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
   stopCluster(cl)
   # output what the number of medals for our score was
   if (c == "USA") {
-    View(medal_scores2/n)
+    print(medal_scores2/n)
   }
   print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
