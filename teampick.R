@@ -2,8 +2,9 @@ library("parallel")
 library("foreach")
 library("doParallel")
 
-team_pick <- function(country_df, others_df){
-  n<-10#99 # number of simulations of athletes
+team_pick <- function(country_df, others_df, weights=rep(1,9)){
+  n<-99 # number of simulations of athletes
+  weights <- weights / sum(weights) # normalize to 1
   
   # Get country name
   c <- country_df[1, "Country"] %>% as.character()
@@ -127,7 +128,7 @@ team_pick <- function(country_df, others_df){
       
       medal_scores[j,] <- medal_scores[j,] + c(team_medals,
                                                as.numeric(ind_aa_country[1:3,'Country']==c),
-                                               ind_medals)
+                                               ind_medals) * weights
     }
     medal_scores
   }
