@@ -98,7 +98,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
     
     # Check each combination and how many medals will come from it
     for(j in 1:ncol(comb)){
-      cur_team_names <- intersect( unlist(comb[j]), team_names)# find which team names are included in this loop
+      cur_team_names <- unlist(comb[j])# find which team names are included in this loop
       
       # Team AA:
       #if country can't win team medals are 0, otherwise we calculate if we get a medal

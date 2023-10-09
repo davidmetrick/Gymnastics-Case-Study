@@ -42,7 +42,8 @@ men_all_df = data_2223 %>%
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
             Country=Country[1]) %>%
   arrange(var_score) %>%
-  head(-floor(nrow(.)/15))
+  head(-floor(nrow(.)/15))%>%
+  mutate(fullname=paste(FirstName,LastName))
 
 men_others =men_all_df%>% group_by(FirstName,LastName,Country) %>% 
   summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
@@ -60,9 +61,10 @@ women_all_df = data_2223 %>%
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
             Country=Country[1]) %>%
   arrange(var_score) %>%
-  head(-floor(nrow(.)/15))
+  head(-floor(nrow(.)/15))%>%
+  mutate(fullname=paste(FirstName,LastName))
 
-women_others =men_all_df%>% group_by(FirstName,LastName,Country) %>% 
+women_others =women_all_df%>% group_by(FirstName,LastName,Country) %>% 
   summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
   filter(!(Country %in% countries_men))%>%
   arrange(avg_score)%>%head(36)%>% select(FirstName,LastName) %>%left_join(men_all_df)%>%
