@@ -136,7 +136,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9)){
   stopCluster(cl)
   # output what the number of medals for our score was
   if (c == "USA") {
-    print(medal_scores2/n)
+    View(medal_scores2/n)
   }
   print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
