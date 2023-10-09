@@ -7,3 +7,5 @@ data_1721 <- read.csv('https://raw.githubusercontent.com/ucsas/gym2024data/main/
 # read in data_2022_2023.csv
 data_2223 <- read.csv('https://raw.githubusercontent.com/ucsas/gym2024data/main/cleandata/data_2022_2023.csv')
 
+#combine dfs
+data_2223 <- rbdind(data_2223,data_1721)
