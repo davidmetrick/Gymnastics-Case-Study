@@ -121,6 +121,20 @@ contains_top_1<-function(comb,country_df,type="men"){
 set.seed(123)
 
 source('teampick.R')
+
+weights_list <- list(c(1,1,1), c(1,2,3), c(1,3,2), c(2,1,3), c(2,3,1), c(3,1,2), c(3,2,1), c(2,1,1), c(1,2,1), c(1,1,2), c(3,1,1), c(1,3,1), c(1,1,3), c(2,2,1), c(2,1,2), c(1,2,2), c(3,3,1), c(3,1,3), c(1,3,3))
+
+priority_list <- list(c(1,1,1), c(1,0,0), c(3,2,1))
+
+weight_vectors <- list()
+index <- 1
+
+for (i in (1:19)) {
+  for (j in (1:3)) {
+    weight_vectors[[index]] <- as.vector(outer(priority_list[[j]], weights_list[[i]],"*"))
+    index <- index + 1
+  }
+}
 ##########################
 
 # Time to pick!
