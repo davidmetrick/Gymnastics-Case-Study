@@ -1,65 +1,242 @@
 library(shiny)
 library(tidyverse)
 
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-
-    # Application title
-    titlePanel("Team Predictions"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            selectInput("gender", "Gender", choices = c("Men", "Women")),
-            radioButtons("weights",
-                         "Medal weights",
-                         choices = c("Maximize medals",
-                                     "Maximize gold medals",
-                                     "Optimize for team event",
-                                     "Custom weights")),
-            
-            uiOutput("weight_sliders"),
-        width = 6),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           tableOutput("picked_team")
-        )
-    )
+  # Application title
+  titlePanel("Team Predictions"),
+  tabsetPanel(
+    id = 'tabs',
+    tabPanel(title = 'Generate Teams',
+             # Sidebar with a slider input for number of bins 
+             sidebarLayout(
+               sidebarPanel(
+                 selectInput("gender", "Gender", choices = c("Women"='w',
+                                                             "Men" = 'm')),
+                 fluidRow(
+                   column(width = 6, h4("Medal Weights"),
+                          radioButtons("medal_weight", label = '',
+                                       choices = c("Maximize total medals",
+                                                   "Maximize gold medals"))),
+                   column(width = 6, h4("Event Weights"),
+                          sliderInput("team", "Team Event", min = 1, max = 3, 
+                                      value = 2, step = 1, ticks = F),
+                          sliderInput("aa", "Individual All-Around", min = 1, 
+                                      max = 3, value = 2, step = 1, ticks = F),
+                          sliderInput("event", "Individual Apparatus", min = 1, 
+                                      max = 3, value = 2, step = 1, ticks = F))
+                 ),
+                 # Thought: Incorporate Submit button
+                 width = 6),
+               
+               # Show a plot of the generated distribution
+               mainPanel(
+                 tableOutput("team_table"),
+                 uiOutput("exp_medals"),
+                 width = 6
+               )
+             )),
+    tabPanel(title = 'Compare Teams',
+             fluidRow(column(4), column(8, selectInput("gender", "Gender", 
+                                                       choices = c("Women"='w',"Men" = 'm')),
+                                        div(style = "margin-top:-20px"))),
+             fluidRow(
+               
+               column(6, 
+                      h4("Team A"),
+                      
+                      fluidRow(
+                        column(2),
+                        column(10, 
+                               selectInput('personA1', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personA2', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personA3', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personA4', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personA5', label = '',choices = NULL))),
+                      uiOutput('exp_medalsA')
+               ),
+               column(6, 
+                      h4("Team B"),
+                      
+                      fluidRow(
+                        column(2),
+                        column(10, 
+                               selectInput('personB1', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personB2', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personB3', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personB4', label = '',choices = NULL),
+                               div(style = "margin-top:-20px"),
+                               selectInput('personB5', label = '',choices = NULL))),
+                      uiOutput('exp_medalsB')
+               ),
+               
+             )
+    ) 
+  )
 )
+
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
   # source('../get.data.r')
   # source('../prep.data.r')
-
   
-  output$weight_sliders <- renderUI({
-    categories <- c("Team Gold", "Team Silver", "Team Bronze",
-                    "All-Around Gold", "All-Around Silver", "All-Around Bronze",
-                    "Event Gold", "Event Silver", "Event Bronze")
-    slider_list <- list()
-    if (input$weights == 'Custom weights'){
-      for (i in 1:9){
-        slider_list[[i]] <- sliderInput(categories[i], categories[i],
-                    min = 0, max = 1, value = 0.5, ticks = F)
-        # slider_list[[i]] <- numericInput(categories[i], categories[i], 
-        #                                  value = 0.5, min = 0, max = 1, 
-        #                                  step = 0.25)
+  # Put in reactive?? 
+  # Read in csvs based on inputs (will be coded)
+  
+  
+  picked_team <- reactive({
+    suffix <- paste0(input$gender, '.csv')
+    if (file.exists(paste0('../scores-' ,suffix))){
+      scores <- read_csv(paste0('../scores-' ,suffix), show_col_types = FALSE)
+      
+      # Do we need new names tables for everything? Probably not.
+      names <- read_csv(paste0('../names-', suffix), show_col_types = FALSE)
+      
+      # Total expected medals
+      scores$composite <- rowSums(scores) 
+      
+      best_team <- which.max(scores$composite)
+      list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,])
+    }
+    else{
+      'Undefined'}
+  })
+  
+  
+  
+  
+  output$team_table <- renderTable({
+    data.frame('Best_Team' = picked_team()[['Athletes']])}, striped = T)
+  
+  # Helper for exp_medals widget
+  get_medals <- function(name, group = ''){
+    if (group == ''){
+      return(picked_team()[['Exp_Medals']][name] |> round(digits = 2))
+    } else{
+      if (file.exists(paste0('../names-', input$gender, '.csv'))){
+        names <- read_csv(paste0('../names-', input$gender, '.csv' ), 
+                          show_col_types = FALSE) |> lapply(sort) 
+        scores <- read_csv(paste0('../scores-' ,input$gender, 
+                                  '.csv'), show_col_types = FALSE)
+        teams <- list('A' = sort(c(input$personA1, input$personA2, input$personA3,
+                                   input$personA4, input$personA5)),
+                      'B' = sort(c(input$personB1, input$personB2, input$personB3,
+                                   input$personB4, input$personB5))) 
+        if (group == 'A'){
+          # Get team!
+          team <- scores[which(sapply(names, identical, teams[['A']])),]
+          return(team[name] |> round(digits = 2))
+        }
+        else if (group == 'B'){
+          # Get team!
+          team <- scores[which(sapply(names, identical, teams[['B']])),]
+          return(team[name] |> round(digits = 2))
+        }
       }
-      fluidPage(fluidRow(column(width = 4, slider_list[[1]]),
-                         column(width = 4, slider_list[[2]]),
-                         column(width = 4, slider_list[[3]])),
-                fluidRow(column(width = 4, slider_list[[4]]),
-                         column(width = 4, slider_list[[5]]),
-                         column(width = 4, slider_list[[6]])),
-                fluidRow(column(width = 4, slider_list[[7]]),
-                         column(width = 4, slider_list[[8]]),
-                         column(width = 4, slider_list[[9]])))
+    } 
+  }
+  
+  # Helper for exp_medals widget
+  medal_row <- function(long_name, short_name, group = ''){
+    
+    return(
+      div(fluidRow(column(3, h4(long_name)),
+               column(3,  h4('🥇'), h6("Gold"), 
+                      div(h4(get_medals(paste0(short_name, '_g'), group)), 
+                          style = 'border-style:solid; text-align:center;
+                          background-color:#ffffff')),
+               column(3,  h4('🥈'), h6("Silver"), 
+                      div(h4(get_medals(paste0(short_name, '_s'), group)), 
+                          style = 'border-style:solid; text-align:center;
+                          background-color:#ffffff')),
+               column(3,   h4('🥉'), h6("Bronze"), 
+                      div(h4(get_medals(paste0(short_name, '_b'), group)), 
+                          style = 'border-style:solid; text-align:center;
+                          background-color:#ffffff')),
+               style = 'background-color:#94cef2; border-style:solid;
+               margin:10px; padding:5px;')
+    ))}
+  
+  # Add in some CSS here to make it look nicer :) 
+  output$exp_medals <- renderUI({
+    div(h3("Expected Medals"),
+        medal_row('Team', 'team'),
+        medal_row('Indiv. All Around', 'aa'),
+        medal_row('Indiv. Apparatus', 'event')
+    )
+  })
+  
+  output$exp_medalsA <- renderUI({
+    team <- c(input$personA1, input$personA2, input$personA3,
+              input$personA4, input$personA5) |> sort()
+    if (length(unique(team)) < 5){
+      div(h4("Selected team must consist of 5 unique athletes"), 
+          style = "color:red;")
+    } else{
+      
+      div(h3("Expected Medals"),
+          medal_row('Team', 'team', 'A'),
+          medal_row('Indiv. All Around', 'aa', 'A'),
+          medal_row('Indiv. Apparatus', 'event', 'A')
+      )
+    }
+  })
+  
+  output$exp_medalsB <- renderUI({
+    team <- c(input$personB1, input$personB2, input$personB3,
+              input$personB4, input$personB5) |> sort()
+    if (length(unique(team)) < 5){
+      div(h4("Selected team must consist of 5 unique athletes"), 
+          style = "color:red;")
+    } else{
+      
+      div(h3("Expected Medals"),
+          medal_row('Team', 'team', 'B'),
+          medal_row('Indiv. All Around', 'aa', 'B'),
+          medal_row('Indiv. Apparatus', 'event', 'B')
+      )
+    }
+  })
+  
+  ########## Compare
+  
+  athlete_pool <- reactive({
+    
+    if (file.exists(paste0('../names-' , input$gender, '.csv'))){
+      all_names <- read.csv(paste0('../names-' , input$gender, '.csv')) |> 
+        unlist() |> unique()
+      
+      all_names
     }
     
   })
+  
+  
+  
+  observe({
+
+    for (i in 1:5){
+      updateSelectInput(inputId = paste0('personA', i), choices = athlete_pool(),
+                        selected = athlete_pool()[i])
+      updateSelectInput(inputId = paste0('personB', i), choices = athlete_pool(),
+                        selected = athlete_pool()[i+1])
+    }
+  })
+  
+  ################## END SERVER ###############################
+  
 }
+
+
 
 # Run the application 
 shinyApp(ui = ui, server = server)
