@@ -32,19 +32,21 @@ ui <- fluidPage(
                
                # Show a plot of the generated distribution
                mainPanel(
+                 h4("Best Team", style = 'text-align:center'),
                  tableOutput("team_table"),
                  uiOutput("exp_medals"),
                  width = 6
                )
              )),
     tabPanel(title = 'Compare Teams',
-             fluidRow(column(4), column(8, selectInput("gender", "Gender", 
-                                                       choices = c("Women"='w',"Men" = 'm')),
+             fluidRow(column(4), 
+                      column(8, selectInput("gender", "Gender",
+                                            choices = c("Women"='w',"Men" = 'm')),
                                         div(style = "margin-top:-20px"))),
              fluidRow(
                
                column(6, 
-                      h4("Team A"),
+                      h4("Team A", style = 'text-align:center;'),
                       
                       fluidRow(
                         column(2),
@@ -61,7 +63,7 @@ ui <- fluidPage(
                       uiOutput('exp_medalsA')
                ),
                column(6, 
-                      h4("Team B"),
+                      h4("Team B", style = 'text-align:center;'),
                       
                       fluidRow(
                         column(2),
@@ -115,7 +117,8 @@ server <- function(input, output) {
   
   
   output$team_table <- renderTable({
-    data.frame('Best_Team' = picked_team()[['Athletes']])}, striped = T)
+    data.frame('Best_Team' = picked_team()[['Athletes']])}, 
+    striped = T, width = '200%', colnames = F, align = 'c')
   
   # Helper for exp_medals widget
   get_medals <- function(name, group = ''){
@@ -150,25 +153,28 @@ server <- function(input, output) {
     
     return(
       div(fluidRow(column(3, h4(long_name)),
-               column(3,  h4('🥇'), h6("Gold"), 
-                      div(h4(get_medals(paste0(short_name, '_g'), group)), 
-                          style = 'border-style:solid; text-align:center;
+                   column(3,  h4('🥇', style = 'text-align:center;'),
+                          h6("Gold", style = 'text-align:center;'), 
+                          div(h4(get_medals(paste0(short_name, '_g'), group)), 
+                              style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
-               column(3,  h4('🥈'), h6("Silver"), 
-                      div(h4(get_medals(paste0(short_name, '_s'), group)), 
-                          style = 'border-style:solid; text-align:center;
+                   column(3,  h4('🥈', style = 'text-align:center;'), 
+                          h6("Silver", style = 'text-align:center;'), 
+                          div(h4(get_medals(paste0(short_name, '_s'), group)), 
+                              style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
-               column(3,   h4('🥉'), h6("Bronze"), 
-                      div(h4(get_medals(paste0(short_name, '_b'), group)), 
-                          style = 'border-style:solid; text-align:center;
+                   column(3,   h4('🥉', style = 'text-align:center;'),
+                          h6("Bronze", style = 'text-align:center;'), 
+                          div(h4(get_medals(paste0(short_name, '_b'), group)), 
+                              style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
-               style = 'background-color:#94cef2; border-style:solid;
+                   style = 'background-color:#94cef2; border-style:solid;
                margin:10px; padding:5px;')
-    ))}
+      ))}
   
   # Add in some CSS here to make it look nicer :) 
   output$exp_medals <- renderUI({
-    div(h3("Expected Medals"),
+    div(h4("Expected Medals", style = 'text-align:center;'),
         medal_row('Team', 'team'),
         medal_row('Indiv. All Around', 'aa'),
         medal_row('Indiv. Apparatus', 'event')
@@ -183,7 +189,7 @@ server <- function(input, output) {
           style = "color:red;")
     } else{
       
-      div(h3("Expected Medals"),
+      div(h4("Expected Medals", style = 'text-align:center;'),
           medal_row('Team', 'team', 'A'),
           medal_row('Indiv. All Around', 'aa', 'A'),
           medal_row('Indiv. Apparatus', 'event', 'A')
@@ -199,7 +205,7 @@ server <- function(input, output) {
           style = "color:red;")
     } else{
       
-      div(h3("Expected Medals"),
+      div(h4("Expected Medals", style = 'text-align:center;'),
           medal_row('Team', 'team', 'B'),
           medal_row('Indiv. All Around', 'aa', 'B'),
           medal_row('Indiv. Apparatus', 'event', 'B')
@@ -223,7 +229,7 @@ server <- function(input, output) {
   
   
   observe({
-
+    
     for (i in 1:5){
       updateSelectInput(inputId = paste0('personA', i), choices = athlete_pool(),
                         selected = athlete_pool()[i])
