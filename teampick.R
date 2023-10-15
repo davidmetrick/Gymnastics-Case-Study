@@ -3,7 +3,7 @@ library("foreach")
 library("doParallel")
 
 team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
-  n<-99 # number of simulations of athletes
+  n<-49 # number of simulations of athletes
   weights <- 9*weights / sum(weights) # normalize to 9 (so medal sum normalizes to 1)
   
   # Get country name
@@ -135,21 +135,20 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   # stop cluster
   stopCluster(cl)
   # output what the number of medals for our score was
-  if (c == "USA") {
-    write.csv(medal_scores2/n, paste0("scores-", gender, ".csv"), row.names=FALSE)
-    write.csv(comb, paste0("names-", gender, ".csv"), row.names=FALSE)
-    # DM - the lines below don't do anything because they're inside the
-    # function, but they work as a way to consolidate the data frame in a
-    # separate R script (replacing paste with scores-w and names-w, obviously)
-    scores <- read.csv(paste0("scores-", gender, ".csv"))
-    scores$composite <- rowSums(scores)
-    names <- read.csv(paste0("names-", gender, ".csv"))
-    scores$name1 <- unlist(names[1,], use.names=FALSE)
-    scores$name2 <- unlist(names[2,], use.names=FALSE)
-    scores$name3 <- unlist(names[3,], use.names=FALSE)
-    scores$name4 <- unlist(names[4,], use.names=FALSE)
-    scores$name5 <- unlist(names[5,], use.names=FALSE)
-  }
+  write.csv(medal_scores2/n, paste0("scores-", paste(weights,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(comb, paste0("names-",paste(weights,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  # DM - the lines below don't do anything because they're inside the
+  # function, but they work as a way to consolidate the data frame in a
+  # separate R script (replacing paste with scores-w and names-w, obviously)
+  scores <- read.csv(paste0("scores-", paste(weights,collapse="."),
+                            "-",c,"-",gender, ".csv"))
+  scores$composite <- rowSums(scores)
+  names <- read.csv(paste0("names-",paste(weights,collapse="."),"-",c,"-", gender, ".csv"))
+  scores$name1 <- unlist(names[1,], use.names=FALSE)
+  scores$name2 <- unlist(names[2,], use.names=FALSE)
+  scores$name3 <- unlist(names[3,], use.names=FALSE)
+  scores$name4 <- unlist(names[4,], use.names=FALSE)
+  scores$name5 <- unlist(names[5,], use.names=FALSE)
   print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
 }
