@@ -126,18 +126,18 @@ server <- function(input, output) {
     suffix <- paste0(input$gender, '.csv')
     weight <- as.vector(outer(priority_weight, weight_list,"*"))
     #browser()
-    print(paste0('../sidsims/scores-' ,
+    print(paste0('../totsims/scores-' ,
                  paste(weight,collapse="."),"-","USA","-",
                  input$gender,".csv"))
-    if (file.exists(paste0('../sidsims/scores-' ,
+    if (file.exists(paste0('../totsims/scores-' ,
                            paste(weight,collapse="."),"-","USA","-",
                            input$gender,".csv"))){
-      scores <- read_csv(paste0('../sidsims/scores-' ,
+      scores <- read_csv(paste0('../totsims/scores-' ,
                                 paste(weight,collapse="."),"-","USA","-",
                                 input$gender,".csv"), show_col_types = FALSE)
       
       # Do we need new names tables for everything? Probably not.
-      names <- read_csv(paste0('../sidsims/names-',
+      names <- read_csv(paste0('../totsims/names-',
                                paste(weight,collapse="."),"-","USA","-",
                                input$gender,".csv"), show_col_types = FALSE)
       
@@ -165,12 +165,12 @@ server <- function(input, output) {
     } else{
       #Change to 1,1,1 1,1,1
       weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
-      if (file.exists(paste0('../sidsims/names-',paste(weight,collapse="."),
+      if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
                              "-","USA","-",input$gender2, '.csv'))){
-        names <- read_csv(paste0('../sidsims/names-',paste(weight,collapse="."),
+        names <- read_csv(paste0('../totsims/names-',paste(weight,collapse="."),
                                  "-","USA","-",input$gender2, '.csv'), 
                           show_col_types = FALSE) |> lapply(sort) 
-        scores <- read_csv(paste0('../sidsims/scores-',paste(weight,collapse="."),
+        scores <- read_csv(paste0('../totsims/scores-',paste(weight,collapse="."),
                                   "-","USA","-",input$gender2, '.csv'), show_col_types = FALSE)
         teams <- list('A' = sort(c(input$personA1, input$personA2, input$personA3,
                                    input$personA4, input$personA5)),
@@ -262,10 +262,10 @@ server <- function(input, output) {
     weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
     
     
-    if (file.exists(paste0('../sidsims/names-',paste(weight,collapse="."),
+    if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
                            "-","USA","-",input$gender2, '.csv'))){
       print("ss")
-      all_names <- read.csv(paste0('../sidsims/names-',paste(weight,collapse="."),
+      all_names <- read.csv(paste0('../totsims/names-',paste(weight,collapse="."),
                                    "-","USA","-",input$gender2, '.csv')) |> 
         unlist() |> unique()
       
