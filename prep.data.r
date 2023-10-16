@@ -91,6 +91,9 @@ data_2223[data_2223$outlier == 2,]$Country <- "BRA"
 data_2223$outlier <- (data_2223$LastName=="CALLUM") + (data_2223$FirstName=="MC")
 data_2223[data_2223$outlier == 1,]$FirstName <- "GRACE"
 data_2223[data_2223$outlier == 1,]$LastName <- "MCCALLUM"
+data_2223$outlier <- (data_2223$FirstName == "CALLUM") + (data_2223$LastName == "MC")
+data_2223[data_2223$outlier == 2,]$FirstName <- "GRACE"
+data_2223[data_2223$outlier == 2,]$LastName <- "MCCALLUM"
 data_2223 <- subset(data_2223, select = -outlier)
 
 #Remove all duplicated rows
