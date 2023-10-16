@@ -72,14 +72,14 @@ data_2223$outlier <- (data_2223$LastName == "BARBOSA") + (data_2223$FirstName ==
 data_2223[data_2223$outlier == 2,]$Country <- "BRA"
 data_2223$outlier <- (data_2223$LastName == "DJORDJEVIC") + (data_2223$FirstName == "DUSAN")
 data_2223[data_2223$outlier == 2,]$Country <- "SRB"
-data_2223$outlier <- (data_2223$LastName == "GRÜNBERG") + (data_2223$FirstName == "JERMAIN")
-data_2223[data_2223$outlier == 2,]$Country <- "NED"
+# data_2223$outlier <- (data_2223$LastName == "GRÜNBERG") + (data_2223$FirstName == "JERMAIN")
+# data_2223[data_2223$outlier == 2,]$Country <- "NED"
 data_2223$outlier <- (data_2223$LastName == "JONASSON") + (data_2223$FirstName == "ARNTHOR")
 data_2223[data_2223$outlier == 2,]$Country <- "ISL"
-data_2223$outlier <- (data_2223$LastName == "LIMA") + (data_2223$FirstName == "ANA")
-data_2223[data_2223$outlier == 2,]$Country <- "BRA"
-data_2223$outlier <- (data_2223$LastName == "MEULEMAN") + (data_2223$FirstName == "CASEY-JANE")
-data_2223[data_2223$outlier == 2,]$Country <- "NED"
+# data_2223$outlier <- (data_2223$LastName == "LIMA") + (data_2223$FirstName == "ANA")
+# data_2223[data_2223$outlier == 2,]$Country <- "BRA"
+# data_2223$outlier <- (data_2223$LastName == "MEULEMAN") + (data_2223$FirstName == "CASEY-JANE")
+# data_2223[data_2223$outlier == 2,]$Country <- "NED"
 data_2223$outlier <- (data_2223$LastName == "POGHOSYAN") + (data_2223$FirstName == "MANE")
 data_2223[data_2223$outlier == 2,]$Country <- "ARM"
 data_2223$outlier <- (data_2223$LastName == "RAPOSO") + (data_2223$FirstName == "CLARA")

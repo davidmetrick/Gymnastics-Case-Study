@@ -129,7 +129,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
       
       medal_scores[j,] <- medal_scores[j,] + c(team_medals,
                                                as.numeric(ind_aa_country[1:3,'Country']==c),
-                                               ind_medals) * weights
+                                               ind_medals)
     }
     medal_scores
   }
@@ -150,7 +150,10 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   # scores$name3 <- unlist(names[3,], use.names=FALSE)
   # scores$name4 <- unlist(names[4,], use.names=FALSE)
   # scores$name5 <- unlist(names[5,], use.names=FALSE)
+  
+  #now multiply by weight
+  medal_scores2 = t(apply(medal_scores2,1,function(x) x*weights))
   print(max(rowSums(medal_scores2))/n)
-  return(comb[which.max(rowSums(medal_scores2))])
+  return(comb[which.max(rowSums(medal_scores2,na.rm = T))])
 }
 
