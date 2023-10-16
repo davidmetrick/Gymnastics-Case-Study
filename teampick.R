@@ -3,7 +3,7 @@ library("foreach")
 library("doParallel")
 
 team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
-  n<-99 # number of simulations of athletes
+  n<-11 # number of simulations of athletes
   weights2 <- weights # for printing
   weights <- 9*weights / sum(weights) # normalize to 9 (so medal sum normalizes to 1)
   
@@ -136,8 +136,8 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   # stop cluster
   stopCluster(cl)
   # output what the number of medals for our score was
-  write.csv(medal_scores2/n, paste0("fullsims/scores-", paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
-  write.csv(comb, paste0("fullsims/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(medal_scores2/n, paste0("davidsims/scores-", paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(comb, paste0("davidsims/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
   # DM - the lines below don't do anything because they're inside the
   # function, but they work as a way to consolidate the data frame in a
   # separate R script (replacing paste with scores-w and names-w, obviously)
@@ -150,7 +150,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   # scores$name3 <- unlist(names[3,], use.names=FALSE)
   # scores$name4 <- unlist(names[4,], use.names=FALSE)
   # scores$name5 <- unlist(names[5,], use.names=FALSE)
-  # print(max(rowSums(medal_scores2))/n)
+  print(max(rowSums(medal_scores2))/n)
   return(comb[which.max(rowSums(medal_scores2))])
 }
 
