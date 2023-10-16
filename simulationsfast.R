@@ -55,7 +55,7 @@ men_others =men_all_df%>% group_by(FirstName,LastName,Country) %>%
 women_all_df = data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
   drop_na() %>%
-  filter(Gender == 'm') %>%
+  filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
