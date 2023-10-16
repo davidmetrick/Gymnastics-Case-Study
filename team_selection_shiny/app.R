@@ -18,7 +18,8 @@ ui <- fluidPage(
                    column(width = 6, h4("Medal Weights"),
                           radioButtons("medal_weight", label = '',
                                        choices = c("Maximize total medals",
-                                                   "Maximize gold medals"))),
+                                                   "Maximize gold medals",
+                                                   "Prefer gold medals"))),
                    column(width = 6, h4("Event Weights"),
                           sliderInput("team", "Team Event", min = 1, max = 3, 
                                       value = 2, step = 1, ticks = F),
@@ -40,7 +41,7 @@ ui <- fluidPage(
              )),
     tabPanel(title = 'Compare Teams',
              fluidRow(column(4), 
-                      column(8, selectInput("gender", "Gender",
+                      column(8, selectInput("gender2", "Gender",
                                             choices = c("Women"='w',"Men" = 'm')),
                                         div(style = "margin-top:-20px"))),
              fluidRow(
@@ -96,12 +97,49 @@ server <- function(input, output) {
   
   
   picked_team <- reactive({
+    # convert weight to number
+    priority_weight <- switch(input$medal_weight,
+                         "Maximize total medals" = c(1,1,1),
+                         "Maximize gold medals" = c(1,0,0),
+                         "Prefer gold medals" = c(3,2,1))
+    weight_list <- c(input$team,input$aa,input$event)
+    
+    #need equivalents
+    # c(3,2,1) - 6
+    # c(1,1,1) c(2,2,2) c(3,3,3) - 3
+    # 122 233 - 6
+    # 133 - 3
+    # 112 223 - 6
+    # 113 - 3
+    
+
+    weight_list <- switch(paste0(weight_list,collapse = ""),
+                     "222" = c(1,1,1),
+                     "333" = c(1,1,1),
+                     "233" = c(1,2,2),
+                     "323" = c(2,1,2),
+                     "332" = c(2,2,1),
+                     "223" = c(1,1,2),
+                     "232" = c(1,2,1),
+                     "322" = c(2,1,1),
+                     weight_list)
     suffix <- paste0(input$gender, '.csv')
-    if (file.exists(paste0('../scores-' ,suffix))){
-      scores <- read_csv(paste0('../scores-' ,suffix), show_col_types = FALSE)
+    weight <- as.vector(outer(priority_weight, weight_list,"*"))
+    #browser()
+    print(paste0('../totsims/scores-' ,
+                 paste(weight,collapse="."),"-","USA","-",
+                 input$gender,".csv"))
+    if (file.exists(paste0('../totsims/scores-' ,
+                           paste(weight,collapse="."),"-","USA","-",
+                           input$gender,".csv"))){
+      scores <- read_csv(paste0('../totsims/scores-' ,
+                                paste(weight,collapse="."),"-","USA","-",
+                                input$gender,".csv"), show_col_types = FALSE)
       
       # Do we need new names tables for everything? Probably not.
-      names <- read_csv(paste0('../names-', suffix), show_col_types = FALSE)
+      names <- read_csv(paste0('../totsims/names-',
+                               paste(weight,collapse="."),"-","USA","-",
+                               input$gender,".csv"), show_col_types = FALSE)
       
       # Total expected medals
       scores$composite <- rowSums(scores) 
@@ -125,11 +163,15 @@ server <- function(input, output) {
     if (group == ''){
       return(picked_team()[['Exp_Medals']][name] |> round(digits = 2))
     } else{
-      if (file.exists(paste0('../names-', input$gender, '.csv'))){
-        names <- read_csv(paste0('../names-', input$gender, '.csv' ), 
+      #Change to 1,1,1 1,1,1
+      weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
+      if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
+                             "-","USA","-",input$gender2, '.csv'))){
+        names <- read_csv(paste0('../totsims/names-',paste(weight,collapse="."),
+                                 "-","USA","-",input$gender2, '.csv'), 
                           show_col_types = FALSE) |> lapply(sort) 
-        scores <- read_csv(paste0('../scores-' ,input$gender, 
-                                  '.csv'), show_col_types = FALSE)
+        scores <- read_csv(paste0('../totsims/scores-',paste(weight,collapse="."),
+                                  "-","USA","-",input$gender2, '.csv'), show_col_types = FALSE)
         teams <- list('A' = sort(c(input$personA1, input$personA2, input$personA3,
                                    input$personA4, input$personA5)),
                       'B' = sort(c(input$personB1, input$personB2, input$personB3,
@@ -216,9 +258,15 @@ server <- function(input, output) {
   ########## Compare
   
   athlete_pool <- reactive({
+    #change to 1,1,1 and 1,1,1
+    weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
     
-    if (file.exists(paste0('../names-' , input$gender, '.csv'))){
-      all_names <- read.csv(paste0('../names-' , input$gender, '.csv')) |> 
+    
+    if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
+                           "-","USA","-",input$gender2, '.csv'))){
+      print("ss")
+      all_names <- read.csv(paste0('../totsims/names-',paste(weight,collapse="."),
+                                   "-","USA","-",input$gender2, '.csv')) |> 
         unlist() |> unique()
       
       all_names
@@ -229,7 +277,6 @@ server <- function(input, output) {
   
   
   observe({
-    
     for (i in 1:5){
       updateSelectInput(inputId = paste0('personA', i), choices = athlete_pool(),
                         selected = athlete_pool()[i])
