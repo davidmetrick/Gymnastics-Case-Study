@@ -55,7 +55,7 @@ men_others =men_all_df%>% group_by(FirstName,LastName,Country) %>%
 women_all_df = data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
   drop_na() %>%
-  filter(Gender == 'm') %>%
+  filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
@@ -122,7 +122,7 @@ set.seed(123)
 
 source('teampick.R')
 
-weights_list <- list(c(1,1,1), c(1,2,3), c(1,3,2), c(2,1,3), c(2,3,1), c(3,1,2), c(3,2,1), c(2,1,1), c(1,2,1), c(1,1,2), c(3,1,1), c(1,3,1), c(1,1,3), c(2,2,1), c(2,1,2), c(1,2,2), c(3,3,1), c(3,1,3), c(1,3,3))
+weights_list <- list(c(0,0,1), c(0,1,0), c(1,0,0), c(0,1,1), c(1,0,1), c(1,1,0), c(0,1,2), c(0,2,1), c(1,0,2), c(1,2,0), c(2,0,1), c(2,1,0), c(1,1,1), c(1,1,2), c(1,2,1), c(2,1,1), c(1,2,2),c(2,1,2), c(2,2,1))
 
 priority_list <- list(c(1,1,1), c(1,0,0), c(3,2,1))
 

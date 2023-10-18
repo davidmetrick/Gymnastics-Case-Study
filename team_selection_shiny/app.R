@@ -126,9 +126,6 @@ server <- function(input, output) {
     suffix <- paste0(input$gender, '.csv')
     weight <- as.vector(outer(priority_weight, weight_list,"*"))
     #browser()
-    print(paste0('../totsims/scores-' ,
-                 paste(weight,collapse="."),"-","USA","-",
-                 input$gender,".csv"))
     if (file.exists(paste0('../totsims/scores-' ,
                            paste(weight,collapse="."),"-","USA","-",
                            input$gender,".csv"))){
@@ -145,7 +142,7 @@ server <- function(input, output) {
       scores$composite <- rowSums(scores) 
       
       best_team <- which.max(scores$composite)
-      list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,])
+      list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,]/weight)
     }
     else{
       'Undefined'}
@@ -164,7 +161,7 @@ server <- function(input, output) {
       return(picked_team()[['Exp_Medals']][name] |> round(digits = 2))
     } else{
       #Change to 1,1,1 1,1,1
-      weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
+      weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
       if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
                              "-","USA","-",input$gender2, '.csv'))){
         names <- read_csv(paste0('../totsims/names-',paste(weight,collapse="."),
@@ -184,6 +181,7 @@ server <- function(input, output) {
         else if (group == 'B'){
           # Get team!
           team <- scores[which(sapply(names, identical, teams[['B']])),]
+
           return(team[name] |> round(digits = 2))
         }
       }
@@ -259,12 +257,11 @@ server <- function(input, output) {
   
   athlete_pool <- reactive({
     #change to 1,1,1 and 1,1,1
-    weight = as.vector(outer(c(3,2,1), c(1,1,1),"*"))
+    weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
     
     
     if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
                            "-","USA","-",input$gender2, '.csv'))){
-      print("ss")
       all_names <- read.csv(paste0('../totsims/names-',paste(weight,collapse="."),
                                    "-","USA","-",input$gender2, '.csv')) |> 
         unlist() |> unique()
