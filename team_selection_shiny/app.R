@@ -21,12 +21,13 @@ ui <- fluidPage(
                                                    "Maximize gold medals",
                                                    "Prefer gold medals"))),
                    column(width = 6, h4("Event Weights"),
-                          sliderInput("team", "Team Event", min = 1, max = 3, 
-                                      value = 2, step = 1, ticks = F),
-                          sliderInput("aa", "Individual All-Around", min = 1, 
-                                      max = 3, value = 2, step = 1, ticks = F),
-                          sliderInput("event", "Individual Apparatus", min = 1, 
-                                      max = 3, value = 2, step = 1, ticks = F))
+                          sliderInput("team", "Team Event", min = 0, max = 2, 
+                                      value = 1, step = 1, ticks = F),
+                          sliderInput("aa", "Individual All-Around", min = 0, 
+                                      max = 2, value = 1, step = 1, ticks = F),
+                          sliderInput("event", "Individual Apparatus", min = 0, 
+                                      max = 2, value = 1, step = 1, ticks = F),
+                          uiOutput("errorMessage"))
                  ),
                  # Thought: Incorporate Submit button
                  width = 6),
@@ -115,17 +116,26 @@ server <- function(input, output) {
 
     weight_list <- switch(paste0(weight_list,collapse = ""),
                      "222" = c(1,1,1),
-                     "333" = c(1,1,1),
-                     "233" = c(1,2,2),
-                     "323" = c(2,1,2),
-                     "332" = c(2,2,1),
-                     "223" = c(1,1,2),
-                     "232" = c(1,2,1),
-                     "322" = c(2,1,1),
+                     "200" = c(1,0,0),
+                     "020" = c(0,1,0),
+                     "001" = c(0,0,1),
+                     "220" = c(1,1,0),
+                     "202" = c(1,0,1),
+                     "022" = c(0,1,1),
+                     # "333" = c(1,1,1),
+                     # "233" = c(1,2,2),
+                     # "323" = c(2,1,2),
+                     # "332" = c(2,2,1),
+                     # "223" = c(1,1,2),
+                     # "232" = c(1,2,1),
+                     # "322" = c(2,1,1),
                      weight_list)
+    print(weight_list)
     suffix <- paste0(input$gender, '.csv')
     weight <- as.vector(outer(priority_weight, weight_list,"*"))
-    #browser()
+    print(paste0('../totsims/scores-' ,
+                 paste(weight,collapse="."),"-","USA","-",
+                 input$gender,".csv"))
     if (file.exists(paste0('../totsims/scores-' ,
                            paste(weight,collapse="."),"-","USA","-",
                            input$gender,".csv"))){
@@ -144,11 +154,8 @@ server <- function(input, output) {
       best_team <- which.max(scores$composite)
       list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,]/weight)
     }
-    else{
-      'Undefined'}
+    
   })
-  
-  
   
   
   output$team_table <- renderTable({
@@ -256,6 +263,7 @@ server <- function(input, output) {
   ########## Compare
   
   athlete_pool <- reactive({
+    print('pool')
     #change to 1,1,1 and 1,1,1
     weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
     
@@ -273,7 +281,8 @@ server <- function(input, output) {
   
   
   
-  observe({
+observe({
+  print('update')
     for (i in 1:5){
       updateSelectInput(inputId = paste0('personA', i), choices = athlete_pool(),
                         selected = athlete_pool()[i])
@@ -282,6 +291,11 @@ server <- function(input, output) {
     }
   })
   
+output$errorMessage <- renderUI({
+  if ((input$team == 0) & (input$aa == 0) & (input$event == 0)){
+    h5("Weights can not all be 0", style = "color:red;" )
+  }
+})
   ################## END SERVER ###############################
   
 }

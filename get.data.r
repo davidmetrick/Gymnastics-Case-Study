@@ -8,4 +8,4 @@ data_1721 <- read.csv('https://raw.githubusercontent.com/ucsas/gym2024data/main/
 data_2223 <- read.csv('https://raw.githubusercontent.com/ucsas/gym2024data/main/cleandata/data_2022_2023.csv')
 
 #combine dfs
-data_2223 <- rbind(data_2223,data_1721)
+#data_2223 <- rbind(data_2223,data_1721) #(uncomment in the future if we deem it necessary)
