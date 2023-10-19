@@ -14,6 +14,7 @@ ui <- fluidPage(
                sidebarPanel(
                  selectInput("gender", "Gender", choices = c("Women"='w',
                                                              "Men" = 'm')),
+                 uiOutput("country"),
                  fluidRow(
                    column(width = 6, h4("Medal Weights"),
                           radioButtons("medal_weight", label = '',
@@ -95,7 +96,11 @@ server <- function(input, output) {
   
   # Put in reactive?? 
   # Read in csvs based on inputs (will be coded)
+  countries_men <- c('USA', 'CHN', 'JPN', 'GBR', 'ITA', 'ESP',
+                     'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
   
+  countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
+                       'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
   
   picked_team <- reactive({
     # convert weight to number
@@ -105,54 +110,36 @@ server <- function(input, output) {
                          "Prefer gold medals" = c(3,2,1))
     weight_list <- c(input$team,input$aa,input$event)
     
-    #need equivalents
-    # c(3,2,1) - 6
-    # c(1,1,1) c(2,2,2) c(3,3,3) - 3
-    # 122 233 - 6
-    # 133 - 3
-    # 112 223 - 6
-    # 113 - 3
-    
-
     weight_list <- switch(paste0(weight_list,collapse = ""),
                      "222" = c(1,1,1),
                      "200" = c(1,0,0),
                      "020" = c(0,1,0),
-                     "001" = c(0,0,1),
+                     "002" = c(0,0,1),
                      "220" = c(1,1,0),
                      "202" = c(1,0,1),
                      "022" = c(0,1,1),
-                     # "333" = c(1,1,1),
-                     # "233" = c(1,2,2),
-                     # "323" = c(2,1,2),
-                     # "332" = c(2,2,1),
-                     # "223" = c(1,1,2),
-                     # "232" = c(1,2,1),
-                     # "322" = c(2,1,1),
                      weight_list)
-    print(weight_list)
-    suffix <- paste0(input$gender, '.csv')
     weight <- as.vector(outer(priority_weight, weight_list,"*"))
-    print(paste0('../totsims/scores-' ,
-                 paste(weight,collapse="."),"-","USA","-",
-                 input$gender,".csv"))
     if (file.exists(paste0('../totsims/scores-' ,
-                           paste(weight,collapse="."),"-","USA","-",
+                           paste(weight,collapse="."),"-",input$country,"-",
                            input$gender,".csv"))){
       scores <- read_csv(paste0('../totsims/scores-' ,
-                                paste(weight,collapse="."),"-","USA","-",
+                                paste(weight,collapse="."),"-",input$country,"-",
                                 input$gender,".csv"), show_col_types = FALSE)
       
       # Do we need new names tables for everything? Probably not.
       names <- read_csv(paste0('../totsims/names-',
-                               paste(weight,collapse="."),"-","USA","-",
+                               paste(weight,collapse="."),"-",input$country,"-",
                                input$gender,".csv"), show_col_types = FALSE)
       
       # Total expected medals
       scores$composite <- rowSums(scores) 
       
       best_team <- which.max(scores$composite)
-      list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,]/weight)
+      list('Athletes' = names[[best_team]], 'Exp_Medals' = scores[best_team,])
+    }else{
+      scoreNA = rep(NA,9)
+      list('Athletes' = c(), 'Exp_Medals' = scoreNA)
     }
     
   })
@@ -167,15 +154,14 @@ server <- function(input, output) {
     if (group == ''){
       return(picked_team()[['Exp_Medals']][name] |> round(digits = 2))
     } else{
-      #Change to 1,1,1 1,1,1
       weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
       if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
-                             "-","USA","-",input$gender2, '.csv'))){
+                             "-",input$country,"-",input$gender2, '.csv'))){
         names <- read_csv(paste0('../totsims/names-',paste(weight,collapse="."),
-                                 "-","USA","-",input$gender2, '.csv'), 
+                                 "-",input$country,"-",input$gender2, '.csv'), 
                           show_col_types = FALSE) |> lapply(sort) 
         scores <- read_csv(paste0('../totsims/scores-',paste(weight,collapse="."),
-                                  "-","USA","-",input$gender2, '.csv'), show_col_types = FALSE)
+                                  "-",input$country,"-",input$gender2, '.csv'), show_col_types = FALSE)
         teams <- list('A' = sort(c(input$personA1, input$personA2, input$personA3,
                                    input$personA4, input$personA5)),
                       'B' = sort(c(input$personB1, input$personB2, input$personB3,
@@ -228,6 +214,23 @@ server <- function(input, output) {
     )
   })
   
+  countries_men <- c('USA', 'CHN', 'JPN', 'GBR', 'ITA', 'ESP',
+                   'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
+
+  countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
+                     'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+  
+  output$country <- renderUI({
+
+    if(input$gender=="w"){
+      countries = countries_women
+    } else{
+      countries = countries_men
+    }
+    selectInput("country", "Country", 
+                choices = countries)
+  })
+  
   output$exp_medalsA <- renderUI({
     team <- c(input$personA1, input$personA2, input$personA3,
               input$personA4, input$personA5) |> sort()
@@ -264,14 +267,13 @@ server <- function(input, output) {
   
   athlete_pool <- reactive({
     print('pool')
-    #change to 1,1,1 and 1,1,1
     weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
     
     
     if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
-                           "-","USA","-",input$gender2, '.csv'))){
+                           "-",input$country,"-",input$gender2, '.csv'))){
       all_names <- read.csv(paste0('../totsims/names-',paste(weight,collapse="."),
-                                   "-","USA","-",input$gender2, '.csv')) |> 
+                                   "-",input$country,"-",input$gender2, '.csv')) |> 
         unlist() |> unique()
       
       all_names
