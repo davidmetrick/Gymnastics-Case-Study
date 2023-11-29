@@ -5,10 +5,10 @@ options("dplyr.summarise.inform" = F)
 # For the men, USA was originally between ITA and ESP; moving them to the front to allow for the simulation algorithm to select them last
 
 countries_men <- c('USA', 'CHN', 'JPN', 'GBR', 'ITA', 'ESP',
-                   'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
+                   'GER', 'CAN', 'TUR', 'SUI', 'NED', 'UKR')
 
 countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
-                     'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+                     'JPN', 'FRA', 'NED', 'ROU', 'AUS', 'KOR')
 
 # Create combined tables with avg/sd scores for each apparatus for each athlete
 
@@ -137,6 +137,8 @@ for (i in (1:19)) {
   }
 }
 
+weight_vectors2 <- weight_vectors[1]
+
 
 ##########################
 
@@ -150,7 +152,7 @@ team_roster <- random_teams
 men_others
 tm = Sys.time()
 # Loop over countries one by one and go through each combination
-for(weight_vector in weight_vectors){
+for(weight_vector in weight_vectors2){
   for (country in rep(rev(countries_men), 2)){
     print(country)
     tm2 = Sys.time()

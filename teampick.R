@@ -3,7 +3,7 @@ library("foreach")
 library("doParallel")
 
 team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
-  n<-44 # number of simulations of athletes
+  n<-11 # number of simulations of athletes
   weights2 <- weights # for printing
   weights <- 9*weights / sum(weights) # normalize to 9 (so medal sum normalizes to 1)
   
