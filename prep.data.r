@@ -88,12 +88,12 @@ data_2223$outlier <- (data_2223$LastName == "TOVMASYAN") + (data_2223$FirstName 
 data_2223[data_2223$outlier == 2,]$Country <- "ARM"
 data_2223$outlier <- (data_2223$LastName == "ZANETTI") + (data_2223$FirstName == "ARTHUR")
 data_2223[data_2223$outlier == 2,]$Country <- "BRA"
-data_2223$outlier <- (data_2223$LastName=="CALLUM") + (data_2223$FirstName=="MC")
-data_2223[data_2223$outlier == 1,]$FirstName <- "GRACE"
-data_2223[data_2223$outlier == 1,]$LastName <- "MCCALLUM"
-data_2223$outlier <- (data_2223$FirstName == "CALLUM") + (data_2223$LastName == "MC")
-data_2223[data_2223$outlier == 2,]$FirstName <- "GRACE"
-data_2223[data_2223$outlier == 2,]$LastName <- "MCCALLUM"
+# data_2223$outlier <- (data_2223$LastName=="CALLUM") + (data_2223$FirstName=="MC")
+# data_2223[data_2223$outlier == 1,]$FirstName <- "GRACE"
+# data_2223[data_2223$outlier == 1,]$LastName <- "MCCALLUM"
+# data_2223$outlier <- (data_2223$FirstName == "CALLUM") + (data_2223$LastName == "MC")
+# data_2223[data_2223$outlier == 2,]$FirstName <- "GRACE"
+# data_2223[data_2223$outlier == 2,]$LastName <- "MCCALLUM"
 data_2223$outlier <- (data_2223$FirstName == "FREDERICKNATHANIEL")
 data_2223[data_2223$outlier == 1,]$FirstName <- "FREDERICK"
 data_2223$outlier <- (data_2223$FirstName == "FRED") + (data_2223$LastName == "RICHARD")

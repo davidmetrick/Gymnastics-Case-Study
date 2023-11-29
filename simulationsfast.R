@@ -137,7 +137,7 @@ for (i in (1:19)) {
   }
 }
 
-weight_vectors2 <- weight_vectors[1]
+weight_vectors2 <- weight_vectors[37]
 
 
 ##########################
@@ -185,7 +185,7 @@ random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 tm = Sys.time()
 # Loop over countries one by one and go through each combination 
-for(weight_vector in weight_vectors){
+for(weight_vector in weight_vectors2){
   for (country in rep(rev(countries_women),2)){
     tm2 = Sys.time()
     print(country)
