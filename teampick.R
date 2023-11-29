@@ -133,6 +133,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
     }
     medal_scores
   }
+  
   # stop cluster
   stopCluster(cl)
   # output what the number of medals for our score was
