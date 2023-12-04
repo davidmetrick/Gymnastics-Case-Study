@@ -15,7 +15,7 @@ countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
 men_df <- data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
   drop_na() %>%
-  filter(Gender == 'm', Country %in% countries_men) %>%
+  filter(Gender == 'm') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
@@ -24,7 +24,7 @@ men_df <- data_2223 %>%
   head(-floor(nrow(.)/15)) %>% mutate(fullname=paste(FirstName,LastName))
 
 women_df <- data_2223 %>% 
-  filter(Gender == 'w', Country %in% countries_women) %>%
+  filter(Gender == 'w') %>%
   group_by(FirstName, LastName, Country, Apparatus) %>% 
   summarize(avg_score = mean(Score,na.rm=T),
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
@@ -33,6 +33,23 @@ women_df <- data_2223 %>%
   head(-floor(nrow(.)/15))%>% mutate(fullname=paste(FirstName,LastName))
 
 #######
+
+women_others_fullnames = c(
+  "KAYLIA NEMOUR", "PAULINE SCHAEFERBETZ","ALEXA MORENO",
+  "FILIPA MARTINS","ALEAH FINNEGAN", "BETTINALILI CZIFRA",
+  "ALBA PETISCO", "ANNA LASHCHEVSKA", "LENA BICKEL",
+  "HILLARY HERON","CAITLIN ROOSKRANTZ","LIHIE RAZ","LUCIJA HRIBAR",
+  "CSENGEMARIA BACSKAY","AHTZIRI SANDOVAL","ANA PEREZ", "SARAH VOSS",
+  "RIFDA IRFANALUTHFI"
+)
+
+men_others_fullnames = c(
+  "MILAD KARIMI", "ARTEM DOLGOPYAT","ARTUR DAVTYAN","KRISZTOFER MESZAROS",
+  "JUNHO LEE","DIOGO SOARES","LUKA VANDENKEYBUS","ANDREI MUNTEAN",
+  "CARLOSEDRIEL YULO","RHYS MCCLENAGHAN","ELEFTHERIOS PETROUNIAS",
+  "KEVIN PENEV","NOAH KUAVITA","TIN SRBIC"
+)
+
 men_all_df = data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
   drop_na() %>%
@@ -42,14 +59,22 @@ men_all_df = data_2223 %>%
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
             Country=Country[1]) %>%
   arrange(var_score) %>%
-  head(-floor(nrow(.)/15))%>%
   mutate(fullname=paste(FirstName,LastName))
 
-men_others =men_all_df%>% group_by(FirstName,LastName,Country) %>% 
-  summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
-  filter(!(Country %in% countries_men))%>%
-  arrange(avg_score)%>%head(36)%>% select(FirstName,LastName) %>%left_join(men_all_df)%>%
-  mutate(fullname=paste(FirstName,LastName))
+
+men_others = men_all_df %>%
+  mutate(fullname=paste(FirstName,LastName)) %>%
+  filter(fullname %in% men_others_fullnames)
+
+men_others =rbind(men_others,
+                    men_all_df%>% group_by(FirstName,LastName,Country) %>% 
+                      summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
+                      mutate(fullname=paste(FirstName,LastName))%>%
+                      filter(!(Country %in% countries_men) & !(fullname %in% men_others_fullnames))%>%
+                      arrange(avg_score)%>%head(36-length(men_others_fullnames))%>% select(FirstName,LastName) %>%left_join(men_all_df)%>%
+                      mutate(fullname=paste(FirstName,LastName)) %>% select(-c("avg_score","var_score"))
+)
+
 
 
 women_all_df = data_2223 %>% 
@@ -61,29 +86,36 @@ women_all_df = data_2223 %>%
             var_score = ifelse(is.na(var(Score)),0,sqrt(var(Score))),
             Country=Country[1]) %>%
   arrange(var_score) %>%
-  head(-floor(nrow(.)/15))%>%
   mutate(fullname=paste(FirstName,LastName))
 
-women_others =women_all_df%>% group_by(FirstName,LastName,Country) %>% 
-  summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
-  filter(!(Country %in% countries_women))%>%
-  arrange(avg_score)%>%head(36)%>% select(FirstName,LastName) %>%left_join(women_all_df)%>%
-  mutate(fullname=paste(FirstName,LastName))
+women_others = women_all_df %>%
+  mutate(fullname=paste(FirstName,LastName)) %>%
+  filter(fullname %in% women_others_fullnames)
 
+women_others =rbind(women_others,
+                    women_all_df%>% group_by(FirstName,LastName,Country) %>% 
+                      summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0)%>%
+                      mutate(fullname=paste(FirstName,LastName))%>%
+                      filter(!(Country %in% countries_women) & !(fullname %in% women_others_fullnames))%>%
+                      arrange(avg_score)%>%head(36-length(women_others_fullnames))%>% select(FirstName,LastName) %>%left_join(women_all_df)%>%
+                      mutate(fullname=paste(FirstName,LastName)) %>% select(-c("avg_score","var_score"))
+)
 
 
 ########
 men_df_composite_top5 <- men_df%>% group_by(FirstName,LastName,Country) %>% 
+  filter(Country %in% countries_men)%>%
   summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0) %>%
   group_by(Country) %>%slice_max(avg_score,n=3,with_ties = F) %>%
   mutate(fullname = paste(FirstName, LastName))
 
-women_df_composite_top5 <- women_df%>% group_by(FirstName,LastName,Country) %>% 
+women_df_composite_top5 <- women_df%>%filter(Country %in% countries_women)%>%
+  group_by(FirstName,LastName,Country) %>% 
   summarise(Apparatus = "AA",avg_score=sum(avg_score),var_score=0) %>%
   group_by(Country) %>%slice_max(avg_score,n=3,with_ties = F) %>%
   mutate(fullname = paste(FirstName, LastName))
 
-men_top5 <- men_df %>% 
+men_top5 <- men_df %>% filter(Country %in% countries_men)%>%
   group_by(Country, Apparatus) %>%
   slice_max(avg_score, n = 3, with_ties = F) %>% ungroup() %>%
   mutate(fullname = paste(FirstName, LastName))
@@ -91,7 +123,7 @@ men_top5 <- men_df %>%
 men_top5_names <- men_top5 %>% rbind(men_df_composite_top5)%>%
   select(FirstName, LastName, Country) %>% unique()
 
-women_top5 <- women_df %>% 
+women_top5 <- women_df %>%  filter(Country %in% countries_women)%>%
   group_by(Country, Apparatus) %>%
   slice_max(avg_score, n = 4, with_ties = F)%>% ungroup()%>%
   mutate(fullname = paste(FirstName, LastName))
@@ -137,8 +169,6 @@ for (i in (1:19)) {
   }
 }
 
-weight_vectors2 <- weight_vectors[37]
-
 
 ##########################
 
@@ -152,7 +182,7 @@ team_roster <- random_teams
 men_others
 tm = Sys.time()
 # Loop over countries one by one and go through each combination
-for(weight_vector in weight_vectors2){
+for(weight_vector in weight_vectors){
   for (country in rep(rev(countries_men), 2)){
     print(country)
     tm2 = Sys.time()
@@ -160,7 +190,8 @@ for(weight_vector in weight_vectors2){
     current <- men_top5_names %>% filter(Country==country) %>%
       left_join(men_df)
     
-    other_teams <- team_roster %>% filter(Country != country)
+    other_teams <- rbind(team_roster %>% filter(Country != country),
+                         men_others)
     best_team <- team_pick(current, other_teams, weights = weight_vector,
                            gender='m')
     print(best_team)
@@ -185,14 +216,15 @@ random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 tm = Sys.time()
 # Loop over countries one by one and go through each combination 
-for(weight_vector in weight_vectors2){
+for(weight_vector in weight_vectors){
   for (country in rep(rev(countries_women),2)){
     tm2 = Sys.time()
     print(country)
     #current <- women_top5 %>% filter(Country == country)
     current <- women_top5_names %>% filter(Country==country) %>%
       left_join(women_df)
-    other_teams <- team_roster %>% filter(Country != country)
+    other_teams <- rbind(team_roster %>% filter(Country != country),
+                         women_others)
     best_team <- team_pick(current, other_teams, gender='w',
                            weights = weight_vector)
     print(as.vector(best_team))
