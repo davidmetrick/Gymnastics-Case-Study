@@ -88,12 +88,12 @@ data_2223$outlier <- (data_2223$LastName == "TOVMASYAN") + (data_2223$FirstName 
 data_2223[data_2223$outlier == 2,]$Country <- "ARM"
 data_2223$outlier <- (data_2223$LastName == "ZANETTI") + (data_2223$FirstName == "ARTHUR")
 data_2223[data_2223$outlier == 2,]$Country <- "BRA"
-data_2223$outlier <- (data_2223$LastName=="CALLUM") + (data_2223$FirstName=="MC")
-data_2223[data_2223$outlier == 1,]$FirstName <- "GRACE"
-data_2223[data_2223$outlier == 1,]$LastName <- "MCCALLUM"
-data_2223$outlier <- (data_2223$FirstName == "CALLUM") + (data_2223$LastName == "MC")
-data_2223[data_2223$outlier == 2,]$FirstName <- "GRACE"
-data_2223[data_2223$outlier == 2,]$LastName <- "MCCALLUM"
+# data_2223$outlier <- (data_2223$LastName=="CALLUM") + (data_2223$FirstName=="MC")
+# data_2223[data_2223$outlier == 1,]$FirstName <- "GRACE"
+# data_2223[data_2223$outlier == 1,]$LastName <- "MCCALLUM"
+# data_2223$outlier <- (data_2223$FirstName == "CALLUM") + (data_2223$LastName == "MC")
+# data_2223[data_2223$outlier == 2,]$FirstName <- "GRACE"
+# data_2223[data_2223$outlier == 2,]$LastName <- "MCCALLUM"
 data_2223$outlier <- (data_2223$FirstName == "FREDERICKNATHANIEL")
 data_2223[data_2223$outlier == 1,]$FirstName <- "FREDERICK"
 data_2223$outlier <- (data_2223$FirstName == "FRED") + (data_2223$LastName == "RICHARD")
@@ -104,6 +104,87 @@ data_2223[data_2223$outlier == 2,]$FirstName <- "KHOI"
 
 data_2223$outlier <- (data_2223$FirstName == "CURRANMICHAEL") + (data_2223$LastName == "PHILLIPS")
 data_2223[data_2223$outlier == 2,]$FirstName <- "CURRAN"
+
+
+data_2223$outlier <- (data_2223$FirstName == "PAULINE") + (data_2223$LastName == "SCHAFER")
+data_2223[data_2223$outlier == 2,]$LastName <- "SCHAEFERBETZ"
+
+
+data_2223$outlier <- (data_2223$FirstName == "ALEXA") + (data_2223$LastName == "MORENOMEDINA")
+data_2223[data_2223$outlier == 2,]$LastName <- "MORENO"
+
+data_2223$outlier <- (data_2223$FirstName == "ALEXACITLALI") + (data_2223$LastName == "MORENOMEDINA")
+data_2223[data_2223$outlier == 2,]$FirstName <- "ALEXA"
+data_2223[data_2223$outlier == 2,]$LastName <- "MORENO"
+
+data_2223$outlier <- (data_2223$FirstName == "NOESAMUEL") + (data_2223$LastName == "SEIFERT")
+data_2223[data_2223$outlier == 2,]$FirstName <- "NOE"
+
+data_2223$outlier <- (data_2223$LastName == "HERONSOTO")
+data_2223[data_2223$outlier == 1,]$LastName <- "HERON"
+
+data_2223$outlier <- (data_2223$FirstName == "HILLARYALEXANDRA")
+data_2223[data_2223$outlier == 1,]$FirstName<- "HILLARY"
+
+data_2223$outlier <- (data_2223$LastName == "OSYSSEKREIMER")
+data_2223[data_2223$outlier == 1,]$LastName<- "OSYSSEK"
+
+data_2223$outlier <- (data_2223$FirstName == "AHTZIRIVIRIDIANA")
+data_2223[data_2223$outlier == 1,]$FirstName<- "AHTZIRI"
+
+data_2223$outlier <- (data_2223$FirstName == "ANDREIVASILE")
+data_2223[data_2223$outlier == 1,]$FirstName<- "ANDREI"
+
+data_2223$outlier <- (data_2223$FirstName == "CARLOS")+ (data_2223$LastName == "YULO")
+data_2223[data_2223$outlier == 2,]$FirstName<- "CARLOSEDRIEL"
+
+data_2223$outlier <- (data_2223$FirstName == "MAX")+ (data_2223$LastName == "WHITLOCKOBE")
+data_2223[data_2223$outlier == 2,]$LastName<- "WHITLOCK"
+
+data_2223$outlier <- (data_2223$FirstName == "MCRHYS")+ (data_2223$LastName == "CLENAGHAN")
+data_2223[data_2223$outlier == 2,]$LastName<- "MCCLENAGHAN"
+data_2223[data_2223$outlier == 2,]$FirsttName<- "RHYS"
+
+data_2223$outlier <- (data_2223$FirstName == "CARLO")+ (data_2223$LastName == "HORR")
+data_2223[data_2223$outlier == 2,]$LastName<- "HOERR"
+
+data_2223$outlier <- (data_2223$FirstName == "LORANDE")+ (data_2223$LastName == "MUNCK")
+data_2223[data_2223$outlier == 2,]$FirstName<- "LORAN"
+data_2223[data_2223$outlier == 2,]$LastName<- "DEMUNK"
+
+data_2223$outlier <- (data_2223$LastName == "MUNCK")
+data_2223[data_2223$outlier == 1,]$LastName<- "DEMUNK"
+
+data_2223$outlier <- (data_2223$FirstName == "DOMINIC")+ (data_2223$LastName == "TAMSEL")
+data_2223[data_2223$outlier == 2,]$FirstName<- "DOMINIC"
+
+
+data_2223$outlier <- (data_2223$FirstName == "MEHMETAYBERK")+ (data_2223$LastName == "KOSAK")
+data_2223[data_2223$outlier == 2,]$FirstName<- "MEHMET"
+
+data_2223$outlier <- (data_2223$FirstName == "ELSABETH")+ (data_2223$LastName == "BLACK")
+data_2223[data_2223$outlier == 2,]$FirstName<- "ELLIE"
+
+data_2223$outlier <- (data_2223$FirstName == "MELANIEDEJESUSDOS")+ (data_2223$LastName == "SANTOS")
+data_2223[data_2223$outlier == 2,]$FirstName<- "MELANIE"
+data_2223[data_2223$outlier == 2,]$LastName<- "DEJESUSDOSSANTOS"
+
+data_2223$outlier <- (data_2223$FirstName == "MELANIEDEJESUSDOS")+ (data_2223$LastName == "SANTOS")
+data_2223[data_2223$outlier == 2,]$FirstName<- "MELANIE"
+data_2223[data_2223$outlier == 2,]$LastName<- "DEJESUSDOSSANTOS"
+
+
+data_2223$outlier <- (data_2223$FirstName == "VERA")+ (data_2223$LastName == "POL")
+data_2223[data_2223$outlier == 2,]$LastName<- "VANPOL"
+
+data_2223$outlier <- (data_2223$FirstName == "EDOARDODE")+ (data_2223$LastName == "ROSA")
+data_2223[data_2223$outlier == 2,]$LastName<- "DEROSA"
+data_2223[data_2223$outlier == 2,]$FirstName<- "EDOARDO"
+
+data_2223$outlier <- (data_2223$FirstName == "MARTIJN")+ (data_2223$LastName == "VEER")
+data_2223[data_2223$outlier == 2,]$LastName<- "DEVEER"
+
+
 
 data_2223 <- subset(data_2223, select = -outlier)
 
