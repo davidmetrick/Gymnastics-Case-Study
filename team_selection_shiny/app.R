@@ -215,10 +215,10 @@ server <- function(input, output) {
   })
   
   countries_men <- c('USA', 'CHN', 'JPN', 'GBR', 'ITA', 'ESP',
-                   'BRA', 'KOR', 'GER', 'CAN', 'TUR', 'HUN')
+                   'GER', 'CAN', 'TUR', 'SUI', 'NED', 'UKR')
 
   countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
-                     'JPN', 'FRA', 'NED', 'HUN', 'ROU', 'BEL')
+                     'JPN', 'FRA', 'NED', 'ROU', 'AUS', 'KOR')
   
   output$country <- renderUI({
 
