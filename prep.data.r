@@ -143,17 +143,17 @@ data_2223[data_2223$outlier == 2,]$LastName<- "WHITLOCK"
 
 data_2223$outlier <- (data_2223$FirstName == "MCRHYS")+ (data_2223$LastName == "CLENAGHAN")
 data_2223[data_2223$outlier == 2,]$LastName<- "MCCLENAGHAN"
-data_2223[data_2223$outlier == 2,]$FirsttName<- "RHYS"
+data_2223[data_2223$outlier == 2,]$FirstName<- "RHYS"
 
 data_2223$outlier <- (data_2223$FirstName == "CARLO")+ (data_2223$LastName == "HORR")
 data_2223[data_2223$outlier == 2,]$LastName<- "HOERR"
 
 data_2223$outlier <- (data_2223$FirstName == "LORANDE")+ (data_2223$LastName == "MUNCK")
 data_2223[data_2223$outlier == 2,]$FirstName<- "LORAN"
-data_2223[data_2223$outlier == 2,]$LastName<- "DEMUNK"
+data_2223[data_2223$outlier == 2,]$LastName<- "DEMUNCK"
 
 data_2223$outlier <- (data_2223$LastName == "MUNCK")
-data_2223[data_2223$outlier == 1,]$LastName<- "DEMUNK"
+data_2223[data_2223$outlier == 1,]$LastName<- "DEMUNCK"
 
 data_2223$outlier <- (data_2223$FirstName == "DOMINIC")+ (data_2223$LastName == "TAMSEL")
 data_2223[data_2223$outlier == 2,]$FirstName<- "DOMINIC"
@@ -164,10 +164,6 @@ data_2223[data_2223$outlier == 2,]$FirstName<- "MEHMET"
 
 data_2223$outlier <- (data_2223$FirstName == "ELSABETH")+ (data_2223$LastName == "BLACK")
 data_2223[data_2223$outlier == 2,]$FirstName<- "ELLIE"
-
-data_2223$outlier <- (data_2223$FirstName == "MELANIEDEJESUSDOS")+ (data_2223$LastName == "SANTOS")
-data_2223[data_2223$outlier == 2,]$FirstName<- "MELANIE"
-data_2223[data_2223$outlier == 2,]$LastName<- "DEJESUSDOSSANTOS"
 
 data_2223$outlier <- (data_2223$FirstName == "MELANIEDEJESUSDOS")+ (data_2223$LastName == "SANTOS")
 data_2223[data_2223$outlier == 2,]$FirstName<- "MELANIE"
