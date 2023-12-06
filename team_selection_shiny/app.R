@@ -184,20 +184,20 @@ server <- function(input, output) {
   medal_row <- function(long_name, short_name, group = ''){
     
     return(
-      div(fluidRow(column(3, h4(long_name)),
-                   column(3,  h4('🥇', style = 'text-align:center;'),
-                          h6("Gold", style = 'text-align:center;'), 
-                          div(h4(get_medals(paste0(short_name, '_g'), group)), 
+      div(fluidRow(column(3, h5(long_name)),
+                   column(3,  h4('🥇', style = 'text-align:center; margin:0px'),
+                          h6("Gold", style = 'text-align:center; margin:3px'), 
+                          div(h5(get_medals(paste0(short_name, '_g'), group)), 
                               style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
-                   column(3,  h4('🥈', style = 'text-align:center;'), 
-                          h6("Silver", style = 'text-align:center;'), 
-                          div(h4(get_medals(paste0(short_name, '_s'), group)), 
+                   column(3,  h4('🥈', style = 'text-align:center; margin:0px'), 
+                          h6("Silver", style = 'text-align:center; margin:3px'), 
+                          div(h5(get_medals(paste0(short_name, '_s'), group)), 
                               style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
-                   column(3,   h4('🥉', style = 'text-align:center;'),
-                          h6("Bronze", style = 'text-align:center;'), 
-                          div(h4(get_medals(paste0(short_name, '_b'), group)), 
+                   column(3,   h4('🥉', style = 'text-align:center; margin:0px'),
+                          h6("Bronze", style = 'text-align:center; margin:3px'), 
+                          div(h5(get_medals(paste0(short_name, '_b'), group)), 
                               style = 'border-style:solid; text-align:center;
                           background-color:#ffffff')),
                    style = 'background-color:#94cef2; border-style:solid;
@@ -276,7 +276,6 @@ server <- function(input, output) {
       
       all_names
     }
-    
   })
   
   
