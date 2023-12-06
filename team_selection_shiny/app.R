@@ -6,15 +6,18 @@ library(tidyverse)
 ui <- fluidPage(
   # Application title
   titlePanel("Team Predictions"),
+  
+  fluidRow(
+    column(6, selectInput("gender", "Gender", choices = c("Women"='w',
+                                              "Men" = 'm'))),
+  column(6, uiOutput("country"))),
   tabsetPanel(
     id = 'tabs',
     tabPanel(title = 'Generate Teams',
              # Sidebar with a slider input for number of bins 
              sidebarLayout(
                sidebarPanel(
-                 selectInput("gender", "Gender", choices = c("Women"='w',
-                                                             "Men" = 'm')),
-                 uiOutput("country"),
+                 
                  fluidRow(
                    column(width = 6, h4("Medal Weights"),
                           radioButtons("medal_weight", label = '',
@@ -42,10 +45,6 @@ ui <- fluidPage(
                )
              )),
     tabPanel(title = 'Compare Teams',
-             fluidRow(column(4), 
-                      column(8, selectInput("gender2", "Gender",
-                                            choices = c("Women"='w',"Men" = 'm')),
-                                        div(style = "margin-top:-20px"))),
              fluidRow(
                
                column(6, 
@@ -156,12 +155,12 @@ server <- function(input, output) {
     } else{
       weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
       if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
-                             "-",input$country,"-",input$gender2, '.csv'))){
+                             "-",input$country,"-",input$gender, '.csv'))){
         names <- read_csv(paste0('../totsims/names-',paste(weight,collapse="."),
-                                 "-",input$country,"-",input$gender2, '.csv'), 
+                                 "-",input$country,"-",input$gender, '.csv'), 
                           show_col_types = FALSE) |> lapply(sort) 
         scores <- read_csv(paste0('../totsims/scores-',paste(weight,collapse="."),
-                                  "-",input$country,"-",input$gender2, '.csv'), show_col_types = FALSE)
+                                  "-",input$country,"-",input$gender, '.csv'), show_col_types = FALSE)
         teams <- list('A' = sort(c(input$personA1, input$personA2, input$personA3,
                                    input$personA4, input$personA5)),
                       'B' = sort(c(input$personB1, input$personB2, input$personB3,
@@ -266,14 +265,13 @@ server <- function(input, output) {
   ########## Compare
   
   athlete_pool <- reactive({
-    print('pool')
     weight = as.vector(outer(c(1,1,1), c(1,1,1),"*"))
     
     
     if (file.exists(paste0('../totsims/names-',paste(weight,collapse="."),
-                           "-",input$country,"-",input$gender2, '.csv'))){
+                           "-",input$country,"-",input$gender, '.csv'))){
       all_names <- read.csv(paste0('../totsims/names-',paste(weight,collapse="."),
-                                   "-",input$country,"-",input$gender2, '.csv')) |> 
+                                   "-",input$country,"-",input$gender, '.csv')) |> 
         unlist() |> unique()
       
       all_names
@@ -284,7 +282,6 @@ server <- function(input, output) {
   
   
 observe({
-  print('update')
     for (i in 1:5){
       updateSelectInput(inputId = paste0('personA', i), choices = athlete_pool(),
                         selected = athlete_pool()[i])
