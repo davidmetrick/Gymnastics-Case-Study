@@ -169,6 +169,7 @@ for (i in (1:19)) {
   }
 }
 
+weight_vectors2 <- weight_vectors[30:57]
 
 ##########################
 
@@ -181,10 +182,12 @@ random_teams <- men_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- random_teams
 men_others
 tm = Sys.time()
+index <- 30
 # Loop over countries one by one and go through each combination
-for(weight_vector in weight_vectors){
+for(weight_vector in weight_vectors2){
+  print(weight_vector)
   for (country in rep(rev(countries_men), 2)){
-    print(country)
+    print(c(country,index))
     tm2 = Sys.time()
     #current <- men_top5 %>%ungroup() %>%filter(Country == country) 
     current <- men_top5_names %>% filter(Country==country) %>%
@@ -201,6 +204,7 @@ for(weight_vector in weight_vectors){
     print(Sys.time()-tm2)
   }
   print(Sys.time()-tm)
+  index <- index + 1
 }
 
 
@@ -215,11 +219,12 @@ random_teams <- women_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 
 team_roster <- random_teams
 tm = Sys.time()
+index <- 1
 # Loop over countries one by one and go through each combination 
 for(weight_vector in weight_vectors){
   for (country in rep(rev(countries_women),2)){
     tm2 = Sys.time()
-    print(country)
+    print(c(country,index))
     #current <- women_top5 %>% filter(Country == country)
     current <- women_top5_names %>% filter(Country==country) %>%
       left_join(women_df)
@@ -234,4 +239,5 @@ for(weight_vector in weight_vectors){
     print(Sys.time()-tm2)
   }
   print(Sys.time()-tm)
+  index <- index + 1
 }
