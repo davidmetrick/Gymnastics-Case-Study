@@ -127,7 +127,7 @@ server <- function(input, output) {
                                 input$gender,".csv"), show_col_types = FALSE)
       
       # Do we need new names tables for everything? Probably not.
-      names <- read_csv(paste0('../totsims/names-',
+      names <- read_csv(paste0('../davidsims/names-',
                                paste(weight,collapse="."),"-",input$country,"-",
                                input$gender,".csv"), show_col_types = FALSE)
       
