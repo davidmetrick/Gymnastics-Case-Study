@@ -58,27 +58,27 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
     # Team round:
     # We calculate the top 3 overall scores for all countries except the current country
     # of interest. Choose best 3 for apparatus (Dumb way of picking top 3 for now)
-    team_comp <- other_team_sim %>% filter(Apparatus=="AA")%>%group_by(Country) %>%
-      slice_max(sim, n = 3, with_ties = F) %>%group_by(Country)%>% summarize(composite = sum(sim)) %>% 
+    team_comp <- other_team_sim %>% filter(Apparatus=="AA") %>% group_by(Country) %>%
+      slice_max(sim, n = 3, with_ties = F) %>% group_by(Country) %>% summarize(composite = sum(sim)) %>% 
       ungroup() %>% slice_max(composite,n=3,with_ties = F)
     
     # Country of interest data frame for the all around
-    country_aa = current_team_sim%>%filter(Apparatus=="AA")
+    country_aa = current_team_sim %>% filter(Apparatus=="AA")
     
     # We calculate the best score we could possibly have for the all-around, this lets
     # us avoid having to find AA scores for each team combination later if its less than the 
     # third place score from other countries
-    country_best = country_aa%>%slice_max(sim, n = 3, with_ties = F)%>%select(sim) %>%sum()
+    country_best = country_aa %>% slice_max(sim, n = 3, with_ties = F)%>%select(sim) %>%sum()
     country_can_win = as.logical(country_best >= team_comp[3,"composite"])
     # Initialise team medals for all-around (updated when country_can_win=TRUE)
     team_medals = c(0,0,0)
     
     # Individual All Around: Calculate best 3 individual scores not from our country
     # doing what we do with the events would be a speedup here
-    ind_aa <- other_team_sim %>% filter(Country!=c)%>% filter(Apparatus=="AA")%>%
+    ind_aa <- other_team_sim %>% filter(Country!=c) %>% filter(Apparatus=="AA") %>%
       group_by(Country) %>% # no more than 2 per country
       slice_max(sim, n = 2, with_ties = F) %>% ungroup() %>%
-      slice_max(sim ,n=3,with_ties = F)
+      slice_max(sim, n = 3,with_ties = F)
     
     # Individual events: Get top 3 individual scores by event (not from country of interest)
     top3_event <- other_team_sim %>% filter(Apparatus!="AA")%>% group_by(Country, Apparatus) %>% 
@@ -92,10 +92,10 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
     # Includes athletes from our country,by event, that are larger than the third place we calculated above
     # we store their raw place from the standings and their place within the team, these two values together
     # can easily allow us to calculate the individual medals for a given combination quickly
-    event_fin_all = current_team_sim%>% filter(Apparatus!="AA")%>% group_by(Apparatus) %>%
-      filter(sim>=third_place[Apparatus])%>%arrange(desc(sim))%>%mutate(within_place=row_number()) %>%
-      ungroup() %>%bind_rows(top3_event)%>%group_by(Apparatus)%>%
-      arrange(desc(sim))%>%mutate(place=row_number()) %>% filter(Country==c)
+    event_fin_all = current_team_sim %>% filter(Apparatus!="AA") %>% group_by(Apparatus) %>%
+      filter(sim>=third_place[Apparatus]) %>% arrange(desc(sim))%>%mutate(within_place=row_number()) %>%
+      ungroup() %>% bind_rows(top3_event) %>% group_by(Apparatus) %>%
+      arrange(desc(sim)) %>% mutate(place=row_number()) %>% filter(Country==c)
     
     # Check each combination and how many medals will come from it
     for(j in 1:ncol(comb)){
@@ -117,7 +117,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
       
       # Individual events: determine how each athlete places in the individual events we use the 
       # raw place and within country place to find this and calculate medals from this
-      event_fin_country = event_fin_all%>% filter(fullname %in% cur_team_names)%>%
+      event_fin_country = event_fin_all%>% filter(fullname %in% cur_team_names) %>%
         group_by(Apparatus)%>% mutate(difference = 
                                         ifelse(!is.na(within_place-lag(within_place)),within_place-lag(within_place)-1,0))%>%
         mutate(place=place-difference) %>% filter(place<=3)%>%group_by(place)%>%
@@ -138,7 +138,7 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   stopCluster(cl)
   # output what the number of medals for our score was
   write.csv(medal_scores2/n, paste0("totsims/scores-", paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
-  write.csv(comb, paste0("davidsims/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(comb, paste0("totsims/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
   # DM - the lines below don't do anything because they're inside the
   # function, but they work as a way to consolidate the data frame in a
   # separate R script (replacing paste with scores-w and names-w, obviously)
