@@ -169,7 +169,7 @@ for (i in (1:19)) {
   }
 }
 
-weight_vectors2 <- weight_vectors[30:57]
+weight_vectors2 <- weight_vectors[35:57]
 
 ##########################
 
@@ -182,9 +182,9 @@ random_teams <- men_top5_names %>% group_by(Country) %>% sample_n(5) %>%
 team_roster <- rbind(random_teams, men_others)
 men_others
 tm = Sys.time()
-index <- 30
+index <- 1
 # Loop over countries one by one and go through each combination
-for(weight_vector in weight_vectors2){
+for(weight_vector in weight_vectors){
   print(weight_vector)
   for (country in rep(rev(countries_men), 2)){
     print(c(country,index))
