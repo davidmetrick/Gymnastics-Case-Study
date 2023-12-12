@@ -27,6 +27,14 @@ knitr::opts_chunk$set(echo   =FALSE,      ## show or suppress the code
 
 
 
+## Introduction
+
+In this project, we attempt to improve USA Gymnastics' team selection criteria for the Summer Olympic Games. For the 2020 Tokyo Olympics (held in 2021), the US Olympic and Paralympic Committee (USOPC) selected the men's team solely to maximize the chance of winning the team gold medal. Given the quality of opposing men's gymnastics teams, such a goal wasn't entirely feasible, and optimizing for the team event came at the expense of single-event specialists who could've won medals in the individual events. We improve this methodology by creating an interactive tool that allows the USOPC to make data-based selection decisions while prioritizing certain events or medal types. It also provides a breakdown of expected medal count in each event for each combination of gymnasts, allowing the user to compare five-person teams and their expected scores side by side.
+
+We used a dataset that contains the full results of top gymnastics competitions in the 2022-23 season. Each athlete is listed with their name, country, competition name, competition date, apparatus, and score. Since the dataset includes the most prestigious events, such as the World Championships, U.S. National Championships, European Championships, and Commonwealth Games, we had with sufficient data for all of the world's top gymnasts in the season.
+
+Section 2 contains data exploration and visualization, which reveals that many gymnasts were present in the data under multiple names, requiring consolidation before further analysis. In Section 3, we build several different predictive models and find that each country in the Olympic team event has between 6 and 15 athletes to choose from who could reasonably contribute to an "optimal" group under our criteria. We discuss the results of the model, including the presence of single-apparatus specialists on the USA men's team, in Section 4. Finally, we discuss conclusions, recommendations and ideas for future work in Section 5.
+
 ## Data exploration and visualization
 
 
@@ -38,7 +46,7 @@ This procedure began with grouping together each athlete's scores and obtaining 
 
 We also approximated each athlete's individual all-around score by totaling up their averages for each of the 4 apparatuses for women and each of the 6 apparatuses for men.
 
-In order to speed up simulations, we chose to limit our athlete pool to only athletes who were either in the top 3 all-around for their country or within the top 3 for at least one apparatus for their country, based on their averaged scores. Due to the large amount of simulations necessary for our team selection, it was important to us to limit our pool of athletes as best we could in the interest of time. Our reasoning was if an athlete was not in the top 3 for any event within their own country, it would be unlikely for them to get a medal in an international competition. This resulted in somewhere between 6 and 14 potential athletes to consider for each of the competing countries.
+In order to speed up simulations, we chose to limit our athlete pool to only athletes who were either in the top 3 all-around for their country or within the top 3 for at least one apparatus for their country, based on their averaged scores. Due to the large amount of simulations necessary for our team selection, it was important to us to limit our pool of athletes as best we could in the interest of time. Our reasoning was if an athlete was not in the top 3 for any event within their own country, it would be unlikely for them to get a medal in an international competition. This resulted in somewhere between 6 and 15 potential athletes to consider for each of the competing countries.
 
 \begin{table}[h]
     \centering
