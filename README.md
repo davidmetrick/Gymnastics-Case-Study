@@ -12,13 +12,21 @@ To run our final user interface, go to team_selection_shiny --> app.R
 # Files
 
 get.data.r: Reads in raw data from data_2022_2023.csv
+
 prep.data.r: Modifies raw data so names are properly formatted, makes new dataframes for each gender and apparatus
+
 teampick.R: Contains the main algorithm that selects a team for a country for a single simulation
+
 simulationsfast.R: Runs all simulations, assigns value to all top-tier USA combinations for 57 different preference vectors
+
 totsims: The simulation results from when we ran the above files in up-to-down order (these will change if the simulations are run again)
+
 team_selection_shiny: Folder that contains the app interface
+
 app.R: App interface using "shiny" R package. To open, click "Run App" in the right-hand corner of the code window (where the "Run" button usually is) in RStudio.
+
 report.Rmd: Final report of our results
+
 report.pdf: Final report, in PDF format
 
 The remaining files can be readily ignored.
