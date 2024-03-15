@@ -1,0 +1,136 @@
+---
+title: "Simulation-based Team Selection for USA Gymnastics at the 2024 Summer Olympic Games"
+author: "Abby Spears, David Metrick, Siddharth Chandrappa"
+institute: "Department of Statistics and Data Science, Yale University"
+date: "2024-03-15"
+output:
+  pagedown::poster_jacobs:
+    self_contained: false
+    pandoc_args: --mathjax
+---
+
+Objectives {.block}
+================================================================================
+
+This project aims to answer the question of team selection for USA Gymnastics for the Summer Olympic Games. By simulating athletes' scores based on their historic performance and incorporating a system of weights to allow for prioritization of different medals and events, we introduce an interactive tool to generate optimized teams and compare team performance to make data-driven decisions in selecting Team USA.
+
+
+
+
+Introduction
+================================================================================
+
+In this project, we attempt to improve USA Gymnastics' team selection criteria for the Summer Olympic Games. For the 2020 Tokyo Olympics (held in 2021), the US Olympic and Paralympic Committee (USOPC) selected the men's team solely to maximize the chance of winning the team gold medal. Given the quality of opposing men's gymnastics teams, such a goal wasn't entirely feasible, and optimizing for the team event came at the expense of single-event specialists who could've won medals in the individual events. We improve this methodology by creating an interactive tool that allows the USOPC to make data-based selection decisions while prioritizing certain events or medal types. It also provides a breakdown of expected medal count in each event for each combination of gymnasts, allowing the user to compare five-person teams and their expected scores side by side.
+
+We used a dataset that contains the full results of top gymnastics competitions in the 2022-23 season. Each athlete is listed with their name, country, competition name, competition date, apparatus, and score. Since the dataset includes the most prestigious events, such as the World Championships, U.S. National Championships, European Championships, and Commonwealth Games, we had with sufficient data for all of the world's top gymnasts in the season.
+
+
+
+
+Data Exploration
+================================================================================
+
+Our main data set was sourced from a series of gymnastics competitions throughout the 2022-2023 competitive season. Discrepancy between events meant that many athletes were listed under a few different names, sometimes with different spellings, middle names listed, or differences in spacing or capitalization. Careful consideration was taken to ensure that athletes were credited for all of their appearances, and this meant we had to incorporate extensive data cleaning.
+
+Our raw data listed each athlete's score for each apparatus at all of the competitions. The nature of this meant that some athletes had more appearances than others, which allows us to have greater insight on their long-term performance than athletes who only competed a small number of times.
+
+From there, we made sure to group up athletes by country and apparatus in order to continue with our analysis. For the sake of our simulations, we made sure to focus on the twelve countries each for men and women that have qualified for the 2024 Paris Olympic Games in order to inform our predictions. We also incorporated the other qualifying athletes from the countries who did not qualify for the team competition.
+
+
+
+
+Methods
+================================================================================
+
+Lorem ipsum dolor **sit amet**, consectetur adipiscing elit. Sed laoreet accumsan mattis. Integer sapien tellus, auctor ac blandit eget, sollicitudin vitae lorem. Praesent dictum tempor pulvinar. Suspendisse potenti. Sed tincidunt varius ipsum, et porta nulla suscipit et. Etiam congue bibendum felis, ac dictum augue cursus a. **Donec** magna eros, iaculis sit amet placerat quis, laoreet id est. In ut orci purus, interdum ornare nibh. Pellentesque pulvinar, nibh ac malesuada accumsan, urna nunc convallis tortor, ac vehicula nulla tellus eget nulla. Nullam lectus tortor, _consequat tempor hendrerit_ quis, vestibulum in diam. Maecenas sed diam augue.
+
+
+Important Result {.block}
+================================================================================
+
+Lorem ipsum dolor **sit amet**, consectetur adipiscing elit. Sed commodo molestie porta. Sed ultrices scelerisque sapien ac commodo. Donec ut volutpat elit.
+
+
+
+Mathematical Section
+================================================================================
+
+Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
+  
+\begin{equation}
+E = mc^{2}
+(\#eq:Einstein)
+\end{equation}
+
+Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
+
+\begin{equation}
+\cos^3 \theta =\frac{1}{4}\cos\theta+\frac{3}{4}\cos 3\theta
+(\#eq:refname)
+\end{equation}
+
+Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
+
+\begin{equation}
+\kappa =\frac{\xi}{E_{\mathrm{max}}}
+\end{equation}
+
+Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin. Nam quis odio enim, in molestie libero. Vivamus cursus mi at nulla elementum sollicitudin.
+
+
+Results
+================================================================================
+
+::: {.figure-example}
+Placeholder  
+~~~~~~~  
+Image
+
+Figure 2: Figure caption.
+:::
+
+Nunc tempus venenatis facilisis. Curabitur suscipit consequat eros non porttitor. Sed a massa dolor, id ornare enim:
+
+```{r echo=FALSE}
+knitr::kable(iris[1:5, 1:4], caption = 'Table caption.')
+```
+
+
+Conclusion
+================================================================================
+
+As our tool demonstrates, there is not necessarily "one" correct team to recommend. We hope to offer a bit of flexibility to users based on what medals and events they choose to prioritize, as well as allow for flexible substitutions. In the example discussed above, we can see how 
+the data recommends event specialists when all medals are weighted equally. In sum, by simulating the competition for a series of athletes, we are able to gain insight on what makes a team successful as well as how small changes to the members of a team can influence the team's outcome in large or small ways.
+
+
+
+References
+================================================================================
+
+<div id="refs"></div>
+
+
+
+
+Acknowledgements {data-color=red}
+================================================================================
+
+Nam mollis tristique neque eu luctus. Suspendisse rutrum congue nisi sed convallis. Aenean id neque dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+::: {.logo-example}
+Placeholder Logo
+
+Placeholder Logo
+
+Placeholder Logo
+:::
+
+Nam mollis tristique neque eu luctus. Suspendisse rutrum congue nisi sed convallis. Aenean id neque dolor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+
+
+Contact Information {.block data-color=black data-border-color=orange data-background-color=white}
+================================================================================
+
+- Web: https://www.example.org/smithlab
+- Email: john@example.org
+- Phone: +1 (000) 111 1111
