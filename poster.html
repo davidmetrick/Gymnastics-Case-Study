@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+
+
+
+<title>Simulation-based Team Selection for USA Gymnastics at the 2024 Summer Olympic Games</title>
+
+
+<script src="poster_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="poster_files/viz-1.8.2/viz.js"></script>
+<link href="poster_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="poster_files/grViz-binding-1.0.11/grViz.js"></script>
+
+
+
+
+<style>
+@page {
+size: 45in 38in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0;
+font-size: 45px;
+width: 45in;
+height: 38in;
+padding: 0;
+text-align: justify;
+font-family: Palatino;
+}
+.poster_wrap {
+width: 45in;
+height: 38in;
+padding: 0cm;
+}
+.title_container {
+width: 45in;
+height: calc(38in * 0.15);
+overflow: hidden;
+background-color: #0b4545;
+border: 0 solid #0b4545;
+}
+.logo_left {
+float: left;
+width: 10%;
+height: 100%;
+background-color: #0b4545;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.logo_right {
+float: right;
+width: 10%;
+height: 100%;
+background-color: #0b4545;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+.poster_title {
+text-align: center;
+position: relative;
+float: left;
+width: 80%;
+height: 100%;
+color: #FFFFFF;
+top: 50%;
+transform: translateY(-50%);
+-webkit-transform: translateY(-50%);
+}
+#title {
+font-family: Palatino;
+}
+/* unvisited link */
+a:link {
+color: #cc0000;
+}
+.mybreak {
+  break-before: column;
+}
+/* visited link */
+a:visited {
+color: #cc0000;
+}
+
+/* mouse over link */
+a:hover {
+color: #cc0000;
+}
+
+/* selected link */
+a:active {
+color: #cc0000;
+}
+.poster_body {
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+-webkit-column-rule-width: 1mm;
+-moz-column-rule-width: 1mm;
+column-rule-width: 1mm;
+-webkit-column-rule-style: dashed;
+-moz-column-rule-style: dashed;
+column-rule-style: dashed;
+-webkit-column-rule-color: #0b4545;
+-moz-column-rule-color: #0b4545;
+column-rule-color: #0b4545;
+column-gap: 1em;
+padding-left: 0.5em;
+padding-right: 0.5em;
+height: 100%;
+color: #000000
+background-color: #ffffff;
+}
+.poster_title h1 {
+font-size: 75pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+.poster_body_wrap{
+width: calc(45in + 0 + 0);
+height: calc(38in * 0.83);
+padding-top: calc(38in * 0.005);
+padding-bottom: calc(38in * 0.01);
+background-color: #ffffff;
+}
+.poster_title h3 {
+color: #ffffff;
+font-size: 50pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+.poster_title h3 > sup {
+  font-size: 35pt;
+  margin-left: 0.02em;
+}
+.poster_title h5 {
+color: #FFFFFF;
+font-size: 35pt;
+margin: 0;
+border: 0;
+font-weight: normal;
+}
+img {
+margin-top: 2cm;
+margin-bottom: 0;
+}
+.section {
+  padding: 0.2em;
+}
+.poster_body h1 {
+text-align: center;
+color: #FFFFFF;
+font-size: 65pt;
+border: 2mm solid #0b4545;
+background-color: #0b4545;
+border-radius: 4mm 0mm;
+margin-top: 2mm;
+margin-bottom: 2mm;
+font-weight: normal;
+}
+.poster_body h2 {
+color: #000000;
+font-size: 40pt;
+padding-left: 4mm;
+font-weight: normal;
+}
+.span {
+width: 200%;
+}
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
+padding: 4mm;
+width: 75%;
+/* align-items: center; */
+margin: auto;
+padding-left: 2cm;
+}
+code.sourceCode.r{
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+.caption {
+font-size: 25pt;
+}
+.table caption {
+font-size: 25pt;
+padding-bottom: 3mm;
+
+}
+code {
+font-size: 1em;
+font-family: monospace;
+background-color: #00808024;
+color: #0b4545;
+padding: 1.2mm;
+border-radius: 2mm;
+}
+.poster_title code {
+font-size: 1em;
+}
+table {
+font-size: 40px;
+margin: auto;
+border-top: 3px solid #666;
+border-bottom: 3px solid #666;
+}
+table thead th {
+border-bottom: 3px solid #ddd;
+}
+td {
+padding: 8px;
+}
+th {
+padding: 15px;
+}
+caption {
+margin-bottom: 10px;
+}
+.poster_body p {
+margin-right: 4mm;
+margin-left: 4mm;
+margin-top: 6mm;
+margin-bottom: 10mm;
+}
+.poster_body ol {
+margin-right: 4mm;
+margin-left: 4mm;
+}
+#ul {
+margin-right: 4mm;
+margin-left: 4mm;
+}
+.references p {
+font-size: 20pt;
+}
+.orcid img {
+  width: 1em;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+<div class="title_container">
+<!-- Left Logo  -->
+<div class="logo_left">
+</div>
+<!-- Poster Title -->
+<div class= "poster_title">
+<h1 id="title">Simulation-based Team Selection for USA Gymnastics at the 2024 Summer Olympic Games</h1>
+<h3 id="author">Abby Spears<sup></sup>, David Metrick<sup></sup>, Siddharth Chandrappa<sup></sup></h3><br>
+<h5 id="affiliation"><sup>1</sup> Department of Statistics and Data Science, Yale University</h5>
+</div>
+<!-- Right Logo  -->
+<div class="logo_right">
+</div>
+</div>
+
+<div class='poster_body_wrap'>
+<div class='poster_body'>
+<div id="objective" class="section level1">
+<h1>Objective</h1>
+<p>This project aims to answer the question of team selection for USA Gymnastics for the Summer Olympic Games. By simulating athletes’ scores based on their historic performance and incorporating a system of weights to allow for effective and robust comparisons between different medal objectives, we introduce an interactive tool which provides a framework to
+select teams, evaluate performances and make data-driven decisions in selecting Team USA.</p>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>For the 2020 Tokyo Olympics (held in 2021), it appeared the US Olympic and Paralympic Committee (USOPC) selected the men’s team with a priority to maximize the chance of winning the team gold medal. Our simulations revealed that, given the quality of opposition, this goal wasn’t entirely feasible, and a re-orientiation towards single-event specialists would have resulted in more medals.</p>
+<p>We improve this methodology by creating a robust interactive tool that allows the USOPC to make data-based selection decisions while prioritizing and comparing various event and medal combinations. Specifically, it provides a breakdown of expected medal count in each event for each combination of gymnasts, allowing the user to compare five-person teams and their expected scores side-by-side.</p>
+<p>Our dataset contains the full results of top gymnastics competitions in the 2022-23 season. Since the dataset includes a diverse set of events, such as the World Championships, U.S. National Championships, European Championships, and Commonwealth Games, our model had extensive amounts of training data for all of the world’s top gymnasts in the season.</p>
+</div>
+<div id="modeling-and-analysis" class="section level1">
+<h1>Modeling and Analysis</h1>
+<p>Our team selection model consisted of sequentially traversing teams and selecting the optimal team combination conditional on a fixed set for the other teams. This was applied to all countries in order to present reliable scenarios for opposition country teams, thus improving medal estimate reliability.</p>
+<p>The flowchart below overviews the steps taken for our simulation.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<div id="htmlwidget-23acfc8df40fd67c2027" style="width:672px;height:500px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-23acfc8df40fd67c2027">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 1: Steps taken in team selection process.
+</p>
+</div>
+<p>The tables below show the number of athletes considered in the pool for each of the twelve countries, for both men and women.</p>
+<table>
+<caption><span id="tab:unnamed-chunk-2">Table 1: </span>Number of athletes per country (men)</caption>
+<thead>
+<tr class="header">
+<th align="right">CAN</th>
+<th align="right">CHN</th>
+<th align="right">ESP</th>
+<th align="right">GBR</th>
+<th align="right">GER</th>
+<th align="right">ITA</th>
+<th align="right">JPN</th>
+<th align="right">NED</th>
+<th align="right">SUI</th>
+<th align="right">TUR</th>
+<th align="right">UKR</th>
+<th align="right">USA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">10</td>
+<td align="right">11</td>
+<td align="right">8</td>
+<td align="right">11</td>
+<td align="right">10</td>
+<td align="right">13</td>
+<td align="right">15</td>
+<td align="right">6</td>
+<td align="right">11</td>
+<td align="right">8</td>
+<td align="right">8</td>
+<td align="right">14</td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption><span id="tab:unnamed-chunk-3">Table 2: </span>Number of athletes per country (women)</caption>
+<thead>
+<tr class="header">
+<th align="right">AUS</th>
+<th align="right">BRA</th>
+<th align="right">CAN</th>
+<th align="right">CHN</th>
+<th align="right">FRA</th>
+<th align="right">GBR</th>
+<th align="right">ITA</th>
+<th align="right">JPN</th>
+<th align="right">KOR</th>
+<th align="right">NED</th>
+<th align="right">ROU</th>
+<th align="right">USA</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">9</td>
+<td align="right">7</td>
+<td align="right">9</td>
+<td align="right">14</td>
+<td align="right">11</td>
+<td align="right">7</td>
+<td align="right">8</td>
+<td align="right">12</td>
+<td align="right">7</td>
+<td align="right">9</td>
+<td align="right">7</td>
+<td align="right">10</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="visualization-and-interpretation" class="section level1">
+<h1>Visualization and Interpretation</h1>
+<p>Once the simulations were run, one of the key features of this analysis was putting together our findings into an interactive shiny app. The outcome allows users to choose their own custom preferences for weights and explore how different teams might perform differently in competition. This allows for a very thorough exploration of how different groups of athletes will perform.</p>
+<p>The shiny app has two main tabs. For each tab, the user is able to pick whether they want to consider men or women, and which country they would like to look at. These preferences carry over when the tab is changed.</p>
+Below, we show an example of the shiny app in action for the USA men’s team. We hope to highlight a few of the primary capabilities and the conclusions one can draw from them.
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="report_images/shiny_ex.png" alt="Results of the simulation for all medals and events weighted equally as displayed in the shiny app. The optimal team and their expected medals are displayed below." width="50%" />
+<p class="caption">
+Figure 2: Results of the simulation for all medals and events weighted equally as displayed in the shiny app. The optimal team and their expected medals are displayed below.
+</p>
+</div>
+<p>If we choose to weight all of the medals and events the same for the USA mens’ team, our model chooses Paul Juda, Brody Malone, Curran Phillips, Stephen Nedoroscik, and Khoi Young as the best team. This is an interesting outcome - in particular, the selection of Stephen Nedoroscik stands out as an event specialist - while the other 4 selected athletes compete in multiple or all events, Nedoroscik competes only in the pommel horse.</p>
+<p>If we go to the “Compare Teams” tab, we can see the consequences of this.
+Let’s compare our optimal team above with one where we switch our event specialist with a more well-rounded athlete, say, Colt Walker, who competes in five different events.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<img src="report_images/compare.png" alt="The Compare Teams slide of the shiny app shows the expected medals for two teams side by side. Under Team A on the left, we have our &quot;optimal team&quot; chosen for us by the model under equal weights. Under Team B, we keep all of the athletes the same, but sub Stephen Nedoroscik for Colt Walker." width="50%" />
+<p class="caption">
+Figure 3: The Compare Teams slide of the shiny app shows the expected medals for two teams side by side. Under Team A on the left, we have our “optimal team” chosen for us by the model under equal weights. Under Team B, we keep all of the athletes the same, but sub Stephen Nedoroscik for Colt Walker.
+</p>
+</div>
+<p>As we can see event specialist like Nedoroscik is useful when individual apparatus medals are considered equally important as the team and individual all-around events. While the expected medals for the team and individual all-around do not change, we see slightly higher expectations for gold and silver on the individual apparatus events.</p>
+<p>Of course, one may decide that for instance they may value the team event more than the individual events. The model allows for the user to experiment with their own preferences. However, in the context of the problem, it is interesting that the model places focus on event specialists when the the team medal is unlikely, like it is for the US men.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<img src="report_images/QR_code.png" alt="Scan the QR code to access the interactive shiny app, or visit aespears.shinyapp.io/team_selection_shiny . " width="584" />
+<p class="caption">
+Figure 4: Scan the QR code to access the interactive shiny app, or visit aespears.shinyapp.io/team_selection_shiny .
+</p>
+</div>
+</div>
+<div id="conclusions-and-recommendations" class="section level1">
+<h1>Conclusions and Recommendations</h1>
+<p>As our tool demonstrates, there is not necessarily “one” correct team to recommend. We hope to offer a bit of flexibility to users based on what medals and events they choose to prioritize, as well as allow for flexible substitutions. In the example discussed above, we can see how
+the data recommends event specialists when all medals are weighted equally. In sum, by simulating the competition for a series of athletes, we are able to gain insight on what makes a team successful as well as how small changes to the members of a team can influence the team’s outcome in large or small ways.</p>
+</div>
+</div>
+</div>
+
+</div>
+
+
+
+</body>
+</html>
