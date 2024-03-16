@@ -25,7 +25,7 @@ Google fonts api stuff
 <script src="poster_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <script src="poster_files/viz-1.8.2/viz.js"></script>
 <link href="poster_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="poster_files/grViz-binding-1.0.10/grViz.js"></script>
+<script src="poster_files/grViz-binding-1.0.11/grViz.js"></script>
 
 
 
@@ -311,8 +311,8 @@ font-size: 20pt;
 <p>Our team selection model consisted of running a series of simulations for each athlete in order to predict their medal outcome. In order to ensure the medal predictions for Team USA were reliable, we followed the same team selection and simulation procedures for all countries’ competitors.</p>
 <p>The flowchart below overviews the steps taken for our simulation.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
-<div id="htmlwidget-f1bcf49a7b8a3929bfa9" style="width:672px;height:500px;" class="grViz html-widget "></div>
-<script type="application/json" data-for="htmlwidget-f1bcf49a7b8a3929bfa9">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-b9bbcee0c921af47cae5" style="width:672px;height:500px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-b9bbcee0c921af47cae5">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
 Figure 1: Steps taken in team selection process.
 </p>
