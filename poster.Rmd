@@ -8,6 +8,9 @@ affiliation:
   - num: 1
     address: Department of Statistics and Data Science, Yale University
 column_numbers: 3
+body_textsize: 	"36px"
+poster_width: "48in"
+poster_height: "30in"
 output: 
   posterdown::posterdown_html:
     self_contained: false
@@ -33,9 +36,9 @@ Our dataset contains the full results of top gymnastics competitions in the 2022
 
 # Modeling and Analysis
 
-Our team selection model consisted of sequentially traversing teams and selecting the optimal team combination conditional on a fixed set for the other teams. This was applied to all countries in order to present reliable scenarios for opposition country teams, thus improving medal estimate reliability.
+Our team selection model consisted of sequentially traversing all possible teams from one country and selecting the optimal team combination conditional on a fixed set for the other countries' teams. This was applied to all countries in order to present practical scenarios for opposition country teams, thus improving medal estimate reliability.
 
-The flowchart below overviews the steps taken for our simulation.
+The flowchart below overviews the steps taken as part of our simulation process.
 
 ```{r, fig.align='center', fig.height=10, fig.cap='Steps taken in team selection process.'}
 DiagrammeR::grViz("digraph {
@@ -53,6 +56,11 @@ DiagrammeR::grViz("digraph {
   }",
                   height = 500)
 ```
+
+
+
+
+
 
 
 The tables below show the number of athletes considered in the pool for each of the twelve countries, for both men and women.

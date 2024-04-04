@@ -25,34 +25,34 @@ Google fonts api stuff
 <script src="poster_files/htmlwidgets-1.6.2/htmlwidgets.js"></script>
 <script src="poster_files/viz-1.8.2/viz.js"></script>
 <link href="poster_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="poster_files/grViz-binding-1.0.11/grViz.js"></script>
+<script src="poster_files/grViz-binding-1.0.10/grViz.js"></script>
 
 
 
 
 <style>
 @page {
-size: 45in 38in;
+size: 48in 30in;
 margin: 0;
 padding: 0;
 }
 body {
 margin: 0;
-font-size: 45px;
-width: 45in;
-height: 38in;
+font-size: 36px;
+width: 48in;
+height: 30in;
 padding: 0;
 text-align: justify;
 font-family: Palatino;
 }
 .poster_wrap {
-width: 45in;
-height: 38in;
+width: 48in;
+height: 30in;
 padding: 0cm;
 }
 .title_container {
-width: 45in;
-height: calc(38in * 0.15);
+width: 48in;
+height: calc(30in * 0.15);
 overflow: hidden;
 background-color: #0b4545;
 border: 0 solid #0b4545;
@@ -140,10 +140,10 @@ border: 0;
 font-weight: normal;
 }
 .poster_body_wrap{
-width: calc(45in + 0 + 0);
-height: calc(38in * 0.83);
-padding-top: calc(38in * 0.005);
-padding-bottom: calc(38in * 0.01);
+width: calc(48in + 0 + 0);
+height: calc(30in * 0.83);
+padding-top: calc(30in * 0.005);
+padding-bottom: calc(30in * 0.01);
 background-color: #ffffff;
 }
 .poster_title h3 {
@@ -310,11 +310,11 @@ select teams, evaluate performances and make data-driven decisions in selecting 
 </div>
 <div id="modeling-and-analysis" class="section level1">
 <h1>Modeling and Analysis</h1>
-<p>Our team selection model consisted of sequentially traversing teams and selecting the optimal team combination conditional on a fixed set for the other teams. This was applied to all countries in order to present reliable scenarios for opposition country teams, thus improving medal estimate reliability.</p>
-<p>The flowchart below overviews the steps taken for our simulation.</p>
+<p>Our team selection model consisted of sequentially traversing all possible teams from one country and selecting the optimal team combination conditional on a fixed set for the other countries’ teams. This was applied to all countries in order to present practical scenarios for opposition country teams, thus improving medal estimate reliability.</p>
+<p>The flowchart below overviews the steps taken as part of our simulation process.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
-<div id="htmlwidget-23acfc8df40fd67c2027" style="width:672px;height:500px;" class="grViz html-widget "></div>
-<script type="application/json" data-for="htmlwidget-23acfc8df40fd67c2027">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-8d5ef319cc8cec9343a5" style="width:672px;height:500px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-8d5ef319cc8cec9343a5">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
 Figure 1: Steps taken in team selection process.
 </p>
