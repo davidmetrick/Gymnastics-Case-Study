@@ -37,6 +37,8 @@ women_df <- data_2223 %>%
 #######
 # TODO: Change this so only the Olympic competitors are here, except for the US where we keep everyone
 
+source('fullnames.R') # see fullnames.R for how I'm trying to get a list of competitor names without completely hard-coding (this isn't finished)
+
 women_others_fullnames = c(
   "KAYLIA NEMOUR", "PAULINE SCHAEFERBETZ","ALEXA MORENO",
   "FILIPA MARTINS","ALEAH FINNEGAN", "BETTINALILI CZIFRA",
