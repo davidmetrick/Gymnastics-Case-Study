@@ -1,4 +1,5 @@
 # Silencing some annoying messages
+source('prep.data.r')
 options("dplyr.summarise.inform" = F)
 
 # Choosing 12 countries for the men and women
@@ -11,6 +12,7 @@ countries_women <- c('USA', 'GBR', 'CAN', 'BRA', 'ITA', 'CHN',
                      'JPN', 'FRA', 'NED', 'ROU', 'AUS', 'KOR')
 
 # Create combined tables with avg/sd scores for each apparatus for each athlete
+data_2223$Score <- as.numeric(data_2223$Score)
 
 men_df <- data_2223 %>% 
   select(FirstName, LastName, Gender, Country, Apparatus, Score) %>%
@@ -33,6 +35,7 @@ women_df <- data_2223 %>%
   head(-floor(nrow(.)/15))%>% mutate(fullname=paste(FirstName,LastName))
 
 #######
+# TODO: Change this so only the Olympic competitors are here, except for the US where we keep everyone
 
 women_others_fullnames = c(
   "KAYLIA NEMOUR", "PAULINE SCHAEFERBETZ","ALEXA MORENO",
