@@ -137,8 +137,8 @@ team_pick <- function(country_df, others_df, weights=rep(1,9), gender){
   # stop cluster
   stopCluster(cl)
   # output what the number of medals for our score was
-  write.csv(medal_scores2/n, paste0("totsims/scores-", paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
-  write.csv(comb, paste0("totsims/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(medal_scores2/n, paste0("totsims2/scores-", paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
+  write.csv(comb, paste0("totsims2/names-",paste(weights2,collapse="."),"-",c,"-", gender, ".csv"), row.names=FALSE)
   # DM - the lines below don't do anything because they're inside the
   # function, but they work as a way to consolidate the data frame in a
   # separate R script (replacing paste with scores-w and names-w, obviously)
