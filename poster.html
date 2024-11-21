@@ -313,8 +313,13 @@ select teams, evaluate performances and make data-driven decisions in selecting 
 <p>Our team selection model consisted of sequentially traversing all possible teams from one country and selecting the optimal team combination conditional on a fixed set for the other countries’ teams. This was applied to all countries in order to present practical scenarios for opposition country teams, thus improving medal estimate reliability.</p>
 <p>The flowchart below overviews the steps taken as part of our simulation process.</p>
 <div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<<<<<<< Updated upstream
 <div id="htmlwidget-8d5ef319cc8cec9343a5" style="width:672px;height:500px;" class="grViz html-widget "></div>
 <script type="application/json" data-for="htmlwidget-8d5ef319cc8cec9343a5">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+=======
+<div id="htmlwidget-60530087436274dd11e5" style="width:672px;height:500px;" class="grViz html-widget "></div>
+<script type="application/json" data-for="htmlwidget-60530087436274dd11e5">{"x":{"diagram":"digraph {\n  graph [layout = dot, rankdir = TB]\n  \n  node [shape = rectangle]        \n  rec1 [label = \"Group together scores from each athlete and obtain their personal mean and standard deviation\"]\n  rec2 [label = \"Identify top-performing athletes from each country.\"]\n  rec3 [label =  \"Simulate each possible combination of 5 athletes from all 12 countries and calculate expected medals.\"]\n  rec4 [label = \"Weight expected medals according to desired criteria.\"]\n  rec5 [label = \"Pick best team based on weighted expected medals.\" ]\n  \n  # edge definitions with the node IDs\n  rec1 -> rec2 -> rec3 -> rec4 -> rec5\n  }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+>>>>>>> Stashed changes
 <p class="caption">
 Figure 1: Steps taken in team selection process.
 </p>
@@ -396,7 +401,7 @@ Figure 1: Steps taken in team selection process.
 <p>Once the simulations were run, one of the key features of this analysis was putting together our findings into an interactive shiny app. The outcome allows users to choose their own custom preferences for weights and explore how different teams might perform differently in competition. This allows for a very thorough exploration of how different groups of athletes will perform.</p>
 <p>The shiny app has two main tabs. For each tab, the user is able to pick whether they want to consider men or women, and which country they would like to look at. These preferences carry over when the tab is changed.</p>
 Below, we show an example of the shiny app in action for the USA men’s team. We hope to highlight a few of the primary capabilities and the conclusions one can draw from them.
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
 <img src="report_images/shiny_ex.png" alt="Results of the simulation for all medals and events weighted equally as displayed in the shiny app. The optimal team and their expected medals are displayed below." width="50%" />
 <p class="caption">
 Figure 2: Results of the simulation for all medals and events weighted equally as displayed in the shiny app. The optimal team and their expected medals are displayed below.
@@ -405,7 +410,7 @@ Figure 2: Results of the simulation for all medals and events weighted equally a
 <p>If we choose to weight all of the medals and events the same for the USA mens’ team, our model chooses Paul Juda, Brody Malone, Curran Phillips, Stephen Nedoroscik, and Khoi Young as the best team. This is an interesting outcome - in particular, the selection of Stephen Nedoroscik stands out as an event specialist - while the other 4 selected athletes compete in multiple or all events, Nedoroscik competes only in the pommel horse.</p>
 <p>If we go to the “Compare Teams” tab, we can see the consequences of this.
 Let’s compare our optimal team above with one where we switch our event specialist with a more well-rounded athlete, say, Colt Walker, who competes in five different events.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-5"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
 <img src="report_images/compare.png" alt="The Compare Teams slide of the shiny app shows the expected medals for two teams side by side. Under Team A on the left, we have our &quot;optimal team&quot; chosen for us by the model under equal weights. Under Team B, we keep all of the athletes the same, but sub Stephen Nedoroscik for Colt Walker." width="50%" />
 <p class="caption">
 Figure 3: The Compare Teams slide of the shiny app shows the expected medals for two teams side by side. Under Team A on the left, we have our “optimal team” chosen for us by the model under equal weights. Under Team B, we keep all of the athletes the same, but sub Stephen Nedoroscik for Colt Walker.
@@ -413,7 +418,7 @@ Figure 3: The Compare Teams slide of the shiny app shows the expected medals for
 </div>
 <p>As we can see event specialist like Nedoroscik is useful when individual apparatus medals are considered equally important as the team and individual all-around events. While the expected medals for the team and individual all-around do not change, we see slightly higher expectations for gold and silver on the individual apparatus events.</p>
 <p>Of course, one may decide that for instance they may value the team event more than the individual events. The model allows for the user to experiment with their own preferences. However, in the context of the problem, it is interesting that the model places focus on event specialists when the the team medal is unlikely, like it is for the US men.</p>
-<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-6"></span>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-7"></span>
 <img src="report_images/QR_code.png" alt="Scan the QR code to access the interactive shiny app, or visit aespears.shinyapp.io/team_selection_shiny . " width="584" />
 <p class="caption">
 Figure 4: Scan the QR code to access the interactive shiny app, or visit aespears.shinyapp.io/team_selection_shiny .
